@@ -17,6 +17,9 @@ function createCard(w) {
   return card;
 }
 
+// ===========================================
+// РЕНДЕР БЕСКОНЕЧНОГО ОРУЖИЯ
+// ===========================================
 function renderInfiniteWeapons() {
   const container = document.getElementById('infinite-weapon-list');
   if (!container) return;
@@ -30,6 +33,9 @@ function renderInfiniteWeapons() {
   });
 }
 
+// ===========================================
+// РЕНДЕР ШТУЧНОГО ОРУЖИЯ
+// ===========================================
 function renderConsumableWeapons() {
   const container = document.getElementById('consumable-weapon-list');
   if (!container) return;
@@ -43,6 +49,9 @@ function renderConsumableWeapons() {
   });
 }
 
+// ===========================================
+// РЕНДЕР АПГРЕЙДОВ
+// ===========================================
 function renderUpgradeWeapons() {
   const container = document.getElementById('upgrade-weapon-list');
   if (!container) return;
@@ -180,7 +189,7 @@ function closeModal() {
 }
 
 // ===========================================
-// ЗАПУСК
+// ЗАПУСК ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
 // ===========================================
 document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('infinite-weapon-list')) renderInfiniteWeapons();
