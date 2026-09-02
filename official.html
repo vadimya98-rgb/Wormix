@@ -6,7 +6,6 @@
   <title>Официальные страницы — Wormix Guide</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Дополнительные стили для страницы ссылок */
     .links-list {
       display: flex;
       flex-direction: column;
@@ -35,21 +34,33 @@
       font-size: 2rem;
       width: 48px;
       text-align: center;
+      flex-shrink: 0;
     }
     .link-item .info {
       flex: 1;
     }
     .link-item .info .name {
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
     .link-item .info .desc {
       font-size: 0.85rem;
       color: #94a3b8;
+      margin-top: 2px;
     }
     .link-item .arrow {
       color: #94a3b8;
       font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .link-item .badge {
+      font-size: 0.7rem;
+      background: rgba(79,70,229,0.3);
+      color: #818cf8;
+      padding: 2px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-left: 8px;
     }
   </style>
 </head>
@@ -60,54 +71,70 @@
     </div>
 
     <h1>🌐 Официальные страницы</h1>
-    <p class="subtitle">Все официальные ресурсы Wormix Mobile</p>
+    <p class="subtitle">Все официальные ресурсы Wormix Mobile в одном месте</p>
 
     <div class="links-list">
-      <!-- Ссылки (замени URL на актуальные) -->
-      <a href="https://t.me/wormix_official" target="_blank" class="link-item">
+
+      <!-- Wormix Медиа -->
+      <a href="https://t.me/mediawormixmobile" target="_blank" class="link-item">
+        <span class="icon">📹</span>
+        <span class="info">
+          <span class="name">Wormix Медиа</span>
+          <span class="desc">Публикуй свои видео по игре и получай игровые бонусы</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <!-- Официальная группа в Telegram -->
+      <a href="https://t.me/wormix_support" target="_blank" class="link-item">
         <span class="icon">📱</span>
         <span class="info">
-          <span class="name">Telegram</span>
-          <span class="desc">Официальный канал и чат</span>
+          <span class="name">Официальная группа в Telegram</span>
+          <span class="desc">Поддержка Wormix на всех платформах</span>
         </span>
         <span class="arrow">→</span>
       </a>
 
-      <a href="https://vk.com/wormix" target="_blank" class="link-item">
+      <!-- Правила подачи жалоб -->
+      <a href="https://telegra.ph/PRAVILA-PODACHI-ZHALOB-08-21" target="_blank" class="link-item">
+        <span class="icon">📋</span>
+        <span class="info">
+          <span class="name">Правила подачи жалоб</span>
+          <span class="desc">Ознакомься перед отправкой жалобы в Полицию</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <!-- Бот для жалоб -->
+      <a href="https://t.me/policewm_bot" target="_blank" class="link-item">
+        <span class="icon">🤖</span>
+        <span class="info">
+          <span class="name">Бот для обработки жалоб</span>
+          <span class="desc">@policewm_bot — отправляй жалобы на нарушения</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <!-- Официальная группа ВК -->
+      <a href="https://vk.ru/wormixmobile_club" target="_blank" class="link-item">
         <span class="icon">💬</span>
         <span class="info">
-          <span class="name">VKontakte</span>
-          <span class="desc">Официальное сообщество ВК</span>
+          <span class="name">Официальная группа ВКонтакте</span>
+          <span class="desc">Wormix Mobile &amp; Bombix — 19.4K подписчиков</span>
         </span>
         <span class="arrow">→</span>
       </a>
 
-      <a href="https://www.youtube.com/c/Wormix" target="_blank" class="link-item">
-        <span class="icon">▶️</span>
+      <!-- Донат -->
+      <a href="https://vk.ru/id135276005" target="_blank" class="link-item">
+        <span class="icon">💎</span>
         <span class="info">
-          <span class="name">YouTube</span>
-          <span class="desc">Видео, стримы, обновления</span>
+          <span class="name">Донат с выгодой</span>
+          <span class="desc">Приятные бонусы от администрации</span>
         </span>
         <span class="arrow">→</span>
       </a>
 
-      <a href="https://discord.gg/wormix" target="_blank" class="link-item">
-        <span class="icon">🎮</span>
-        <span class="info">
-          <span class="name">Discord</span>
-          <span class="desc">Сервер для общения и игр</span>
-        </span>
-        <span class="arrow">→</span>
-      </a>
-
-      <a href="https://wormix.com" target="_blank" class="link-item">
-        <span class="icon">🌍</span>
-        <span class="info">
-          <span class="name">Официальный сайт</span>
-          <span class="desc">Новости, обновления, магазин</span>
-        </span>
-        <span class="arrow">→</span>
-      </a>
     </div>
   </div>
 </body>
