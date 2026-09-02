@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Официальные страницы — Wormix Guide</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Дополнительные стили для страницы ссылок */
+    .links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .link-item {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: 0.3s;
+      text-decoration: none;
+      color: #fff;
+    }
+    .link-item:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateX(6px);
+      border-color: #818cf8;
+    }
+    .link-item .icon {
+      font-size: 2rem;
+      width: 48px;
+      text-align: center;
+    }
+    .link-item .info {
+      flex: 1;
+    }
+    .link-item .info .name {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .link-item .info .desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .link-item .arrow {
+      color: #94a3b8;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-btn">🏠 Главная</a>
+    </div>
+
+    <h1>🌐 Официальные страницы</h1>
+    <p class="subtitle">Все официальные ресурсы Wormix Mobile</p>
+
+    <div class="links-list">
+      <!-- Ссылки (замени URL на актуальные) -->
+      <a href="https://t.me/wormix_official" target="_blank" class="link-item">
+        <span class="icon">📱</span>
+        <span class="info">
+          <span class="name">Telegram</span>
+          <span class="desc">Официальный канал и чат</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://vk.com/wormix" target="_blank" class="link-item">
+        <span class="icon">💬</span>
+        <span class="info">
+          <span class="name">VKontakte</span>
+          <span class="desc">Официальное сообщество ВК</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://www.youtube.com/c/Wormix" target="_blank" class="link-item">
+        <span class="icon">▶️</span>
+        <span class="info">
+          <span class="name">YouTube</span>
+          <span class="desc">Видео, стримы, обновления</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://discord.gg/wormix" target="_blank" class="link-item">
+        <span class="icon">🎮</span>
+        <span class="info">
+          <span class="name">Discord</span>
+          <span class="desc">Сервер для общения и игр</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://wormix.com" target="_blank" class="link-item">
+        <span class="icon">🌍</span>
+        <span class="info">
+          <span class="name">Официальный сайт</span>
+          <span class="desc">Новости, обновления, магазин</span>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
