@@ -28,7 +28,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.15"><circle cx="10" cy="10" r="2" fill="%23a855f7"/><circle cx="90" cy="80" r="3" fill="%233b82f6"/><circle cx="50" cy="30" r="1.5" fill="%23fcd34d"/></svg>');
+  background: url('https://freeimage.host/i/nHuGs7R');
   background-size: 150px 150px;
   pointer-events: none;
 }
