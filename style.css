@@ -1,4 +1,6 @@
-/* ===== ОБЩИЕ СБРОСЫ ===== */
+/* ========================================
+   ОСНОВНЫЕ СТИЛИ
+======================================== */
 * {
   margin: 0;
   padding: 0;
@@ -8,67 +10,71 @@
 body {
   font-family: system-ui, -apple-system, sans-serif;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: #0a0a1a;
-  overflow-x: hidden;
   padding: 16px;
+  color: #fff;
 }
 
-/* ===== ФОН ===== */
+/* ========================================
+   ФОН
+======================================== */
 .main-bg {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at 20% 50%, #1a0a3e 0%, #0a0a1a 80%);
   z-index: 0;
 }
+
 .main-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background: url('https://iili.io/nHuGs7R.jpg') no-repeat center center/cover;
-  opacity: 0.6;
-  pointer-events: none;
+  opacity: 0.5;
 }
 
-/* ===== КОНТЕЙНЕР ===== */
+/* ========================================
+   КОНТЕЙНЕР
+======================================== */
 .container {
   position: relative;
   z-index: 1;
-  width: 100%;
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* ===== ШАПКА ===== */
+/* ========================================
+   ШАПКА
+======================================== */
 header {
   text-align: center;
   margin-bottom: 24px;
 }
+
 h1 {
   font-size: 2.2rem;
   background: linear-gradient(135deg, #a855f7, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(79,70,229,0.3);
 }
+
 .subtitle {
   color: #94a3b8;
   font-size: 0.95rem;
   margin-top: 4px;
 }
 
-/* ===== ГЛАВНОЕ МЕНЮ (СЕТКА 2 В РЯД) ===== */
+/* ========================================
+   КНОПКИ НА ГЛАВНОЙ (2 В РЯД)
+======================================== */
 .menu {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-/* ===== КАЖДАЯ КНОПКА ===== */
 .menu-btn {
   position: relative;
   display: flex;
@@ -76,33 +82,37 @@ h1 {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  border: 2px solid rgba(255,255,255,0.15);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;
   text-decoration: none;
-  color: white;
+  color: #fff;
   font-weight: 700;
-  font-size: 1.2rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-  transition: all 0.2s ease;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+.menu-btn:hover {
+  transform: scale(1.03);
+  border-color: #818cf8;
+  box-shadow: 0 0 40px rgba(79, 70, 229, 0.3);
+}
+
+/* ===== ПЕРСОНАЖИ (ЯРКИЕ, БЕЗ РАЗМЫТИЯ) ===== */
 .menu-btn::before {
   content: '';
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(6px) brightness(0.6);
-  opacity: 0.7;
+  opacity: 0.9; /* ярче */
+  filter: none; /* убрали размытие */
   transition: 0.3s;
 }
 
-/* ===== ПЕРСОНАЖИ ===== */
 .menu-btn[data-char="dragon"]::before {
   background: url('https://iili.io/nHuMPn9.jpg') no-repeat center center/cover;
 }
@@ -125,50 +135,106 @@ h1 {
   background: url('https://iili.io/nHuMZaj.jpg') no-repeat center center/cover;
 }
 
-/* ===== ПРИЦЕЛ (ПОВЕРХ ВСЕГО) ===== */
-.menu-btn::after {
-  content: '⏺';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3rem;
-  color: rgba(255,255,255,0.12);
-  text-shadow: 0 0 20px rgba(79,70,229,0.4);
-  pointer-events: none;
-  font-weight: 100;
-}
+/* ===== ПРИЦЕЛ УБРАН (::after удалён) ===== */
 
-/* ===== ТЕКСТ НА КНОПКЕ ===== */
+/* ===== ТЕКСТ НА КНОПКЕ (яркий, объёмный) ===== */
 .menu-btn .btn-label {
   position: relative;
   z-index: 2;
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1.3rem;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #fff;
-  text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 4px 8px rgba(0,0,0,0.8);
+  text-shadow: 
+    0 0 20px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.9),
+    0 0 15px rgba(79, 70, 229, 0.6),
+    0 0 30px rgba(79, 70, 229, 0.3);
+  text-align: center;
+  line-height: 1.3;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-/* ===== АНИМАЦИЯ ВЗРЫВА ===== */
+/* ===== АНИМАЦИЯ ПРИ НАЖАТИИ ===== */
 .menu-btn:active {
   animation: explode 0.4s ease forwards;
 }
 @keyframes explode {
   0% { transform: scale(1); }
-  30% { transform: scale(1.15); box-shadow: 0 0 60px rgba(255,200,0,0.7); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0px rgba(255,200,0,0); }
-}
-.menu-btn.exploding::before {
-  animation: particles 0.4s ease-out forwards;
-}
-@keyframes particles {
-  0% { filter: blur(6px) brightness(0.6); opacity: 1; }
-  100% { filter: blur(20px) brightness(2); opacity: 0; transform: scale(1.3); }
+  30% { transform: scale(1.15); box-shadow: 0 0 60px rgba(255, 200, 0, 0.7); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0px rgba(255, 200, 0, 0); }
 }
 
-/* ===== КАРТОЧКИ (СЕТКА) ===== */
+/* ========================================
+   НАВИГАЦИЯ НА ВНУТРЕННИХ СТРАНИЦАХ
+======================================== */
+.top-nav {
+  margin-bottom: 16px;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 8px 18px;
+  border-radius: 40px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+   ВКЛАДКИ (АРСЕНАЛ)
+======================================== */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0 10px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  backdrop-filter: blur(4px);
+  flex: 1;
+  max-width: 180px;
+}
+
+.tab-btn.active {
+  background: rgba(79, 70, 229, 0.3);
+  border-color: #818cf8;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+}
+
+.tab-btn:active {
+  transform: scale(0.95);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ========================================
+   СЕТКА КАРТОЧЕК
+======================================== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -176,7 +242,9 @@ h1 {
   margin-top: 20px;
 }
 
-/* ===== КАРТОЧКА ===== */
+/* ========================================
+   КАРТОЧКА ОРУЖИЯ
+======================================== */
 .card {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(8px);
@@ -185,7 +253,9 @@ h1 {
   padding: 16px 12px;
   text-align: center;
   transition: 0.3s;
+  cursor: pointer;
 }
+
 .card:hover {
   transform: translateY(-4px);
   border-color: #818cf8;
@@ -206,11 +276,13 @@ h1 {
   margin: 10px 0 4px;
   color: #fff;
 }
+
 .card .info {
   font-size: 0.85rem;
   color: #cbd5e1;
   line-height: 1.4;
 }
+
 .card .comment {
   font-size: 0.8rem;
   color: #94a3b8;
@@ -219,80 +291,16 @@ h1 {
   padding-top: 8px;
 }
 
-/* ===== ВКЛАДКИ ===== */
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0 10px;
-  justify-content: center;
-}
-.tab-btn {
-  padding: 10px 20px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-  backdrop-filter: blur(4px);
-  flex: 1;
-  max-width: 180px;
-}
-.tab-btn.active {
-  background: rgba(79, 70, 229, 0.3);
-  border-color: #818cf8;
-  color: #fff;
-  box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
-}
-.tab-btn:active {
-  transform: scale(0.95);
-}
-.tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
-}
-
-/* ===== НАВИГАЦИЯ ===== */
-.top-nav {
-  margin-bottom: 16px;
-}
-.back-btn {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 8px 18px;
-  border-radius: 40px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* ===== ЗАГОЛОВКИ РАЗДЕЛОВ ===== */
-.section-title {
-  margin-top: 30px;
-  font-size: 1.2rem;
-  color: #fcd34d;
-  border-bottom: 2px solid rgba(252, 211, 77, 0.2);
-  padding-bottom: 6px;
-}
-
-/* ===== АДАПТАЦИЯ ПОД ТЕЛЕФОН ===== */
+/* ========================================
+   АДАПТАЦИЯ ПОД ТЕЛЕФОН
+======================================== */
 @media (max-width: 480px) {
   .menu-btn {
     aspect-ratio: 1 / 1;
     border-radius: 20px;
   }
   .menu-btn .btn-label {
-    font-size: 1rem;
-  }
-  .menu-btn::after {
-    font-size: 2.2rem;
+    font-size: 1.0rem;
   }
   .card-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
