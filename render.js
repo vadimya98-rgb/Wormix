@@ -17,9 +17,6 @@ function createCard(w) {
   return card;
 }
 
-// ===========================================
-// РЕНДЕР БЕСКОНЕЧНОГО ОРУЖИЯ
-// ===========================================
 function renderInfiniteWeapons() {
   const container = document.getElementById('infinite-weapon-list');
   if (!container) return;
@@ -33,9 +30,6 @@ function renderInfiniteWeapons() {
   });
 }
 
-// ===========================================
-// РЕНДЕР ШТУЧНОГО ОРУЖИЯ
-// ===========================================
 function renderConsumableWeapons() {
   const container = document.getElementById('consumable-weapon-list');
   if (!container) return;
@@ -49,9 +43,7 @@ function renderConsumableWeapons() {
   });
 }
 
-// ===========================================
-// РЕНДЕР АПГРЕЙДОВ
-// ===========================================
+// ===== ГЛАВНОЕ: функция для апгрейдов =====
 function renderUpgradeWeapons() {
   const container = document.getElementById('upgrade-weapon-list');
   if (!container) return;
@@ -66,7 +58,7 @@ function renderUpgradeWeapons() {
 }
 
 // ===========================================
-// МОДАЛЬНОЕ ОКНО
+// МОДАЛЬНОЕ ОКНО (без изменений)
 // ===========================================
 function openModal(w) {
   let modal = document.getElementById('weapon-modal');
@@ -189,10 +181,10 @@ function closeModal() {
 }
 
 // ===========================================
-// ЗАПУСК ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+// ЗАПУСК
 // ===========================================
 document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('infinite-weapon-list')) renderInfiniteWeapons();
   if (document.getElementById('consumable-weapon-list')) renderConsumableWeapons();
-  if (document.getElementById('upgrade-weapon-list')) renderUpgradeWeapons();
+  if (document.getElementById('upgrade-weapon-list')) renderUpgradeWeapons(); // ВЫЗОВ ДЛЯ АПГРЕЙДОВ
 });
