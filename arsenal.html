@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Арсенал — Wormix Guide</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-btn">🏠 Главная</a>
+    </div>
+
+    <h1>🔫 Арсенал</h1>
+    <p class="subtitle">Всё оружие в Wormix Mobile</p>
+
+    <!-- КНОПКИ-ВКЛАДКИ -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="infinite">♾️ Бесконечное</button>
+      <button class="tab-btn" data-tab="consumable">💥 Штучное</button>
+    </div>
+
+    <!-- СОДЕРЖИМОЕ ВКЛАДОК -->
+    <div id="infinite-tab" class="tab-content active">
+      <div id="infinite-weapon-list" class="card-grid"></div>
+    </div>
+
+    <div id="consumable-tab" class="tab-content">
+      <div id="consumable-weapon-list" class="card-grid"></div>
+    </div>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="render.js"></script>
+  <script>
+    // Переключение вкладок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        const tabId = this.dataset.tab + '-tab';
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
