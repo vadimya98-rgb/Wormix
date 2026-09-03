@@ -249,11 +249,7 @@
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Артефакты, которые можно получить за прохождение боссов
       </p>
-      <div id="boss-artifacts-list" class="boss-grid">
-        <div class="card" style="justify-content:center; cursor:default; opacity:0.7; grid-column: 1 / -1;">
-          <div style="color:#94a3b8; text-align:center; padding:20px;">🏆 Скоро здесь появятся артефакты за боссов</div>
-        </div>
-      </div>
+      <div id="boss-artifacts-list" class="boss-grid"></div>
     </div>
 
     <!-- Вкладка "Сборка" -->
@@ -308,9 +304,31 @@
       });
     }
 
-    // Рендер артефактов за босса (сетка 2 в ряд) – пока заглушка
-    // При появлении данных добавим аналогично bossHats
+    // Рендер артефактов за босса (сетка 2 в ряд)
+    function renderBossArtifacts() {
+      const container = document.getElementById('boss-artifacts-list');
+      if (!container) return;
+      container.innerHTML = '';
+      if (typeof bossArtifacts === 'undefined' || bossArtifacts.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; grid-column: 1 / -1;">🏆 Скоро здесь появятся артефакты за боссов</p>';
+        return;
+      }
+      bossArtifacts.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-icon"><img src="${a.image}" alt="${a.name}" loading="lazy"></div>
+          <h3>${a.name}</h3>
+        `;
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openModal(a.image);
+        });
+        container.appendChild(card);
+      });
+    }
 
+    // Модальное окно
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
@@ -329,6 +347,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
+    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -339,8 +358,10 @@
       });
     });
 
+    // Запуск
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('artifacts-list')) renderArtifacts();
+      if (document.getElementById('boss-artifacts-list')) renderBossArtifacts();
     });
   </script>
 </body>
