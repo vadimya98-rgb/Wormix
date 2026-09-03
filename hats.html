@@ -292,7 +292,7 @@
       return list.find(item => item.name.toLowerCase().trim() === nameLower) || null;
     }
 
-    // ===== РЕНДЕР БАЗЫ =====
+    // ===== РЕНДЕР БАЗЫ (только первые 61 шапка, без итоговых) =====
     function renderHats() {
       const container = document.getElementById('hats-list');
       if (!container) return;
@@ -301,7 +301,13 @@
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">🧢 Скоро здесь появятся шапки</p>';
         return;
       }
-      hats.forEach(h => {
+      // Фильтруем: показываем только шапки с id от 1 до 61 (не итоговые)
+      const baseHats = hats.filter(h => h.id >= 1 && h.id <= 61);
+      if (baseHats.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center;">🧢 База шапок пуста</p>';
+        return;
+      }
+      baseHats.forEach(h => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
