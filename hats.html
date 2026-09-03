@@ -52,6 +52,55 @@
       color: #fff;
     }
 
+    /* Сетка для шапок за босса (2 в ряд) */
+    .boss-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .boss-grid .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .boss-grid .card:hover {
+      transform: translateY(-4px);
+      border-color: #fcd34d;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .boss-grid .card .card-icon {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 8px;
+    }
+    .boss-grid .card .card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .boss-grid .card h3 {
+      font-size: 0.9rem;
+      color: #fff;
+      margin: 0;
+      text-align: center;
+      line-height: 1.2;
+    }
+
     /* Модальное окно для просмотра изображения */
     .image-modal {
       display: none;
@@ -181,7 +230,7 @@
     <h1>🧢 Шапки</h1>
     <p class="subtitle">Все шапки в Wormix Mobile</p>
 
-    <!-- КНОПКИ-ВКЛАДКИ: БАЗА → ЗА БОССА → СБОРКА -->
+    <!-- КНОПКИ-ВКЛАДКИ -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="base">📦 База</button>
       <button class="tab-btn" data-tab="boss">👹 За Босса</button>
@@ -212,13 +261,7 @@
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Шапки, которые можно получить за прохождение боссов
       </p>
-      <div id="boss-hats-list" class="hats-list">
-        <div class="card" style="justify-content: center; cursor: default; opacity: 0.7;">
-          <div style="color: #94a3b8; text-align: center; padding: 20px;">
-            🏆 Скоро здесь появятся шапки за боссов
-          </div>
-        </div>
-      </div>
+      <div id="boss-hats-list" class="boss-grid"></div>
     </div>
 
     <!-- ===== ВКЛАДКА "СБОРКА" ===== -->
@@ -255,6 +298,7 @@
 
   <script src="data.js"></script>
   <script>
+    // Рендер шапок из базы (список)
     function renderHats() {
       const container = document.getElementById('hats-list');
       if (!container) return;
@@ -278,6 +322,31 @@
       });
     }
 
+    // Рендер шапок за босса (сетка 2 в ряд)
+    function renderBossHats() {
+      const container = document.getElementById('boss-hats-list');
+      if (!container) return;
+      container.innerHTML = '';
+      if (typeof bossHats === 'undefined' || bossHats.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; grid-column: 1 / -1;">🏆 Скоро здесь появятся шапки за боссов</p>';
+        return;
+      }
+      bossHats.forEach(h => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-icon"><img src="${h.image}" alt="${h.name}" loading="lazy"></div>
+          <h3>${h.name}</h3>
+        `;
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openModal(h.image);
+        });
+        container.appendChild(card);
+      });
+    }
+
+    // Модальное окно
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
@@ -296,6 +365,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
+    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -306,8 +376,10 @@
       });
     });
 
+    // Запуск
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('hats-list')) renderHats();
+      if (document.getElementById('boss-hats-list')) renderBossHats();
     });
   </script>
 </body>
