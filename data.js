@@ -1081,7 +1081,155 @@ const bossArtifacts = [
 ];
 
 // ===========================================
-//   РЕЦЕПТЫ СБОРКИ (пока пустые, добавятся позже)
+//   ЭМБЛЕМА ВОРМИКС (для рецептов)
 // ===========================================
+const wormixEmblem = {
+  image: "https://iili.io/nHtWyIS.jpg",
+  name: "Эмблема Вормикс"
+};
+
+// ===========================================
+//   РЕЦЕПТЫ СБОРКИ ШАПОК (13 рецептов)
+// ===========================================
+const hatCraftRecipes = [
+  {
+    id: 1,
+    ingredients: [
+      { type: 'hat', name: 'офицерская фуражка' },
+      { type: 'hat', name: 'шлем легионера' },
+      { type: 'bossHat', name: 'Император' },
+      { type: 'emblem', count: 10 }
+    ],
+    result: { name: 'головной убор комиссара' },
+    cost: "1800 фузов / 18 рубинов"
+  },
+  {
+    id: 2,
+    ingredients: [
+      { type: 'hat', name: 'демонический шлем' },
+      { type: 'hat', name: 'шапка аса' },
+      { type: 'emblem', count: 10 }
+    ],
+    result: { name: 'горящий череп' },
+    cost: "2000 фузов / 20 рубинов"
+  },
+  {
+    id: 3,
+    ingredients: [
+      { type: 'hat', name: 'маска героя' },
+      { type: 'hat', name: 'гангстерская шапка' },
+      { type: 'emblem', count: 10 }
+    ],
+    result: { name: 'шлем спецназа' },
+    cost: "15 рубинов"
+  },
+  {
+    id: 4,
+    ingredients: [
+      { type: 'hat', name: 'противогаз' },
+      { type: 'hat', name: 'инопланетный шлем' },
+      { type: 'emblem', count: 5 }
+    ],
+    result: { name: 'респиратор' },
+    cost: "1200 фузов / 12 рубинов"
+  },
+  {
+    id: 5,
+    ingredients: [
+      { type: 'hat', name: 'шлем каскадера' },
+      { type: 'hat', name: 'огнеупорный шлем' },
+      { type: 'emblem', count: 6 }
+    ],
+    result: { name: 'шлем адского гонщика' },
+    cost: "1600 фузов / 16 рубинов"
+  },
+  {
+    id: 6,
+    ingredients: [
+      { type: 'hat', name: 'очки нео' },
+      { type: 'hat', name: 'очки иллюзиониста' },
+      { type: 'emblem', count: 7 }
+    ],
+    result: { name: 'окуляр' },
+    cost: "1200 фузов / 12 рубинов"
+  },
+  {
+    id: 7,
+    ingredients: [
+      { type: 'hat', name: 'шлем биотика' },
+      { type: 'hat', name: 'корона древних' },
+      { type: 'emblem', count: 8 }
+    ],
+    result: { name: 'шлем псайкера' },
+    cost: "1800 фузов / 18 рубинов"
+  },
+  {
+    id: 8,
+    ingredients: [
+      { type: 'hat', name: 'черный ворон' },
+      { type: 'hat', name: 'крик' },
+      { type: 'hat', name: 'шапка алхимика' },
+      { type: 'emblem', count: 6 }
+    ],
+    result: { name: 'ворон' },
+    cost: "1400 фузов / 14 рубинов"
+  },
+  {
+    id: 9,
+    ingredients: [
+      { type: 'hat', name: 'шляпа вампира' },
+      { type: 'hat', name: 'маска шамана королей' },
+      { type: 'bossHat', name: 'Древний призрак' },
+      { type: 'emblem', count: 8 }
+    ],
+    result: { name: 'зловещий образ' },
+    cost: "1600 фузов / 16 рубинов"
+  },
+  {
+    id: 10,
+    ingredients: [
+      { type: 'hat', name: 'каска' },
+      { type: 'hat', name: 'гладиаторский шлем' },
+      { type: 'emblem', count: 8 }
+    ],
+    result: { name: 'скандинавский шлем' },
+    cost: "1400 фузов / 14 рубинов"
+  },
+  {
+    id: 11,
+    ingredients: [
+      { type: 'hat', name: 'меч Палладина' },
+      { type: 'hat', name: 'нимб' },
+      { type: 'hat', name: 'ловец снов' },
+      { type: 'emblem', count: 8 }
+    ],
+    result: { name: 'шлем чемпиона' },
+    cost: "1000 фузов / 10 рубинов"
+  },
+  {
+    id: 12,
+    ingredients: [
+      { type: 'hat', name: 'самурайский шлем' },
+      { type: 'emblem', count: 2 }
+    ],
+    result: { name: 'самурайский шлем' },
+    cost: "—"
+  },
+  {
+    id: 13,
+    ingredients: [
+      { type: 'hat', name: 'маска потрошителя' },
+      { type: 'hat', name: 'шлем с шипами' },
+      { type: 'emblem', count: 6 }
+    ],
+    result: { name: 'шлем изверга' },
+    cost: "1000 фузов / 10 рубинов"
+  }
+];
+
+// ===========================================
+//   РЕЦЕПТЫ ДЛЯ АРТЕФАКТОВ (пока пусто)
+// ===========================================
+const artifactCraftRecipes = [];
 const hatCraftRecipes = [];
 const artifactCraftRecipes = [];
