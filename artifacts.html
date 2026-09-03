@@ -112,15 +112,96 @@
       border-radius: 16px;
       padding: 16px 18px;
       transition: 0.3s;
-      text-align: center;
     }
     .craft-item:hover {
       border-color: #818cf8;
       background: rgba(255,255,255,0.08);
     }
-    .craft-item .craft-placeholder {
+    .craft-item .craft-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .craft-item .craft-ingredient {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      padding: 4px 12px 4px 6px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .craft-item .craft-ingredient:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: #818cf8;
+    }
+    .craft-item .craft-ingredient img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.2);
+      padding: 2px;
+      pointer-events: none;
+    }
+    .craft-item .craft-ingredient .name {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .craft-item .craft-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(252, 211, 77, 0.08);
+      padding: 4px 14px 4px 6px;
+      border-radius: 30px;
+      border: 1px solid rgba(252, 211, 77, 0.2);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .craft-item .craft-result:hover {
+      background: rgba(252, 211, 77, 0.15);
+    }
+    .craft-item .craft-result img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.2);
+      padding: 2px;
+      pointer-events: none;
+    }
+    .craft-item .craft-result .name {
+      font-size: 0.9rem;
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .craft-item .craft-plus {
       color: #94a3b8;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .craft-item .craft-equals {
+      color: #fcd34d;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .craft-item .craft-cost {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding-top: 8px;
     }
 
     .image-modal {
@@ -181,7 +262,7 @@
       <button class="tab-btn" data-tab="craft">🔧 Сборка</button>
     </div>
 
-    <!-- ===== БАЗА ===== -->
+    <!-- База -->
     <div id="base-tab" class="tab-content active">
       <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
         👆 Нажми на иконку — она увеличится
@@ -189,7 +270,7 @@
       <div id="artifacts-list" class="artifacts-list"></div>
     </div>
 
-    <!-- ===== ЗА БОССА ===== -->
+    <!-- За Босса -->
     <div id="boss-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Артефакты, которые можно получить за прохождение боссов
@@ -197,16 +278,15 @@
       <div id="boss-artifacts-list" class="boss-grid"></div>
     </div>
 
-    <!-- ===== СБОРКА ===== -->
+    <!-- Сборка -->
     <div id="craft-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
-        🔧 Рецепты сборки артефактов (скоро добавятся)
+        🔧 Рецепты сборки артефактов
       </p>
-      <div id="craft-list" class="craft-grid">
-        <div class="craft-item">
-          <div class="craft-placeholder">🔜 Скоро появятся рецепты для артефактов</div>
-        </div>
-      </div>
+      <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
+        👆 Нажми на иконку — она увеличится
+      </p>
+      <div id="craft-list" class="craft-grid"></div>
     </div>
 
   </div>
@@ -218,7 +298,17 @@
 
   <script src="data.js"></script>
   <script>
-    // ===== РЕНДЕР БАЗЫ =====
+    function findItem(type, name) {
+      const nameLower = name.toLowerCase().trim();
+      let list = [];
+      if (type === 'artifact') list = artifacts;
+      else if (type === 'bossArtifact') list = bossArtifacts;
+      else if (type === 'hat') list = hats;
+      else if (type === 'bossHat') list = bossHats;
+      else return null;
+      return list.find(item => item.name.toLowerCase().trim() === nameLower) || null;
+    }
+
     function renderArtifacts() {
       const container = document.getElementById('artifacts-list');
       if (!container) return;
@@ -239,7 +329,6 @@
       });
     }
 
-    // ===== РЕНДЕР БОССОВ =====
     function renderBossArtifacts() {
       const container = document.getElementById('boss-artifacts-list');
       if (!container) return;
@@ -260,7 +349,90 @@
       });
     }
 
-    // ===== МОДАЛЬНОЕ ОКНО =====
+    function renderCraftRecipes() {
+      const container = document.getElementById('craft-list');
+      if (!container) return;
+      container.innerHTML = '';
+      if (typeof artifactCraftRecipes === 'undefined' || artifactCraftRecipes.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center;">🔧 Рецепты сборки скоро появятся</p>';
+        return;
+      }
+      artifactCraftRecipes.forEach(recipe => {
+        const item = document.createElement('div');
+        item.className = 'craft-item';
+
+        let ingredientsHTML = '';
+        const ingNames = recipe.ingredients || [];
+        ingNames.forEach((ing, index) => {
+          if (ing.type === 'emblem') {
+            const emblemImg = wormixEmblem?.image || '';
+            const count = ing.count || 1;
+            ingredientsHTML += `
+              <span class="craft-ingredient" data-image="${emblemImg}">
+                <img src="${emblemImg}" alt="Эмблема">
+                <span class="name">${count}× Эмблема</span>
+              </span>
+            `;
+          } else {
+            const found = findItem(ing.type, ing.name);
+            if (found) {
+              ingredientsHTML += `
+                <span class="craft-ingredient" data-image="${found.image}">
+                  <img src="${found.image}" alt="${found.name}">
+                  <span class="name">${found.name}</span>
+                </span>
+              `;
+            } else {
+              ingredientsHTML += `
+                <span class="craft-ingredient">
+                  <span class="name">❓ ${ing.name}</span>
+                </span>
+              `;
+            }
+          }
+          if (index < ingNames.length - 1) {
+            ingredientsHTML += `<span class="craft-plus">+</span>`;
+          }
+        });
+
+        const resultName = recipe.result?.name || 'Неизвестно';
+        const resultItem = findItem('artifact', resultName);
+        let resultHTML = '';
+        if (resultItem) {
+          resultHTML = `
+            <span class="craft-result" data-image="${resultItem.image}">
+              <img src="${resultItem.image}" alt="${resultItem.name}">
+              <span class="name">${resultItem.name}</span>
+            </span>
+          `;
+        } else {
+          resultHTML = `
+            <span class="craft-result">
+              <span class="name">❓ ${resultName}</span>
+            </span>
+          `;
+        }
+
+        item.innerHTML = `
+          <div class="craft-row">
+            ${ingredientsHTML}
+            <span class="craft-equals">=</span>
+            ${resultHTML}
+          </div>
+          <div class="craft-cost">💰 Стоимость: ${recipe.cost || '—'}</div>
+        `;
+        container.appendChild(item);
+      });
+
+      container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const imgSrc = this.dataset.image;
+          if (imgSrc) openModal(imgSrc);
+        });
+      });
+    }
+
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
@@ -277,7 +449,6 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -287,10 +458,10 @@
       });
     });
 
-    // ===== ЗАПУСК =====
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('artifacts-list')) renderArtifacts();
       if (document.getElementById('boss-artifacts-list')) renderBossArtifacts();
+      if (document.getElementById('craft-list')) renderCraftRecipes();
     });
   </script>
 </body>
