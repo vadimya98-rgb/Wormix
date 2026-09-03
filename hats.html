@@ -125,7 +125,8 @@
       gap: 10px;
       margin-bottom: 8px;
     }
-    .craft-item .craft-ingredient {
+    .craft-item .craft-ingredient,
+    .craft-item .craft-result {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -133,19 +134,38 @@
       padding: 4px 12px 4px 6px;
       border-radius: 30px;
       border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .craft-item .craft-ingredient img {
+    .craft-item .craft-ingredient:hover,
+    .craft-item .craft-result:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: #818cf8;
+    }
+    .craft-item .craft-ingredient img,
+    .craft-item .craft-result img {
       width: 36px;
       height: 36px;
       object-fit: contain;
       border-radius: 6px;
       background: rgba(0,0,0,0.2);
       padding: 2px;
+      pointer-events: none;
     }
-    .craft-item .craft-ingredient .name {
+    .craft-item .craft-ingredient .name,
+    .craft-item .craft-result .name {
       font-size: 0.85rem;
       color: #cbd5e1;
       white-space: nowrap;
+      pointer-events: none;
+    }
+    .craft-item .craft-result {
+      background: rgba(252, 211, 77, 0.08);
+      border: 1px solid rgba(252, 211, 77, 0.2);
+    }
+    .craft-item .craft-result .name {
+      color: #fff;
+      font-weight: 600;
     }
     .craft-item .craft-plus {
       color: #94a3b8;
@@ -156,29 +176,6 @@
       color: #fcd34d;
       font-weight: 700;
       font-size: 1.3rem;
-    }
-    .craft-item .craft-result {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(252, 211, 77, 0.08);
-      padding: 4px 14px 4px 6px;
-      border-radius: 30px;
-      border: 1px solid rgba(252, 211, 77, 0.2);
-    }
-    .craft-item .craft-result img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      border-radius: 6px;
-      background: rgba(0,0,0,0.2);
-      padding: 2px;
-    }
-    .craft-item .craft-result .name {
-      font-size: 0.9rem;
-      color: #fff;
-      font-weight: 600;
-      white-space: nowrap;
     }
     .craft-item .craft-cost {
       text-align: center;
@@ -268,6 +265,10 @@
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         🔧 Рецепты сборки шапок
       </p>
+      <!-- ПОДСКАЗКА ДЛЯ КЛИКА -->
+      <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
+        👆 Нажми на шапку — она увеличится
+      </p>
       <div id="craft-list" class="craft-grid"></div>
     </div>
 
@@ -292,7 +293,7 @@
       return list.find(item => item.name.toLowerCase().trim() === nameLower) || null;
     }
 
-    // ===== РЕНДЕР БАЗЫ (только первые 61 шапка, без итоговых) =====
+    // ===== РЕНДЕР БАЗЫ (только первые 61 шапка) =====
     function renderHats() {
       const container = document.getElementById('hats-list');
       if (!container) return;
@@ -301,7 +302,6 @@
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">🧢 Скоро здесь появятся шапки</p>';
         return;
       }
-      // Фильтруем: показываем только шапки с id от 1 до 61 (не итоговые)
       const baseHats = hats.filter(h => h.id >= 1 && h.id <= 61);
       if (baseHats.length === 0) {
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">🧢 База шапок пуста</p>';
@@ -356,43 +356,44 @@
         let ingredientsHTML = '';
         const ingNames = recipe.ingredients || [];
         ingNames.forEach((ing, index) => {
+          let imageSrc = '';
+          let displayName = '';
+          let clickable = false;
           if (ing.type === 'emblem') {
-            const emblemImg = wormixEmblem?.image || '';
-            const count = ing.count || 1;
-            ingredientsHTML += `
-              <span class="craft-ingredient">
-                <img src="${emblemImg}" alt="Эмблема">
-                <span class="name">${count}× Эмблема</span>
-              </span>
-            `;
+            imageSrc = wormixEmblem?.image || '';
+            displayName = `${ing.count || 1}× Эмблема`;
+            clickable = true; // можно увеличить эмблему
           } else {
             const found = findItem(ing.type, ing.name);
             if (found) {
-              ingredientsHTML += `
-                <span class="craft-ingredient">
-                  <img src="${found.image}" alt="${found.name}">
-                  <span class="name">${found.name}</span>
-                </span>
-              `;
+              imageSrc = found.image;
+              displayName = found.name;
+              clickable = true;
             } else {
-              ingredientsHTML += `
-                <span class="craft-ingredient">
-                  <span class="name">❓ ${ing.name}</span>
-                </span>
-              `;
+              imageSrc = '';
+              displayName = `❓ ${ing.name}`;
+              clickable = false;
             }
           }
+          const clickAttr = clickable ? `data-image="${imageSrc}"` : '';
+          ingredientsHTML += `
+            <span class="craft-ingredient" ${clickAttr}>
+              ${imageSrc ? `<img src="${imageSrc}" alt="${displayName}">` : ''}
+              <span class="name">${displayName}</span>
+            </span>
+          `;
           if (index < ingNames.length - 1) {
             ingredientsHTML += `<span class="craft-plus">+</span>`;
           }
         });
 
+        // Результат
         const resultName = recipe.result?.name || 'Неизвестно';
         const resultItem = findItem('hat', resultName) || findItem('bossHat', resultName);
         let resultHTML = '';
         if (resultItem) {
           resultHTML = `
-            <span class="craft-result">
+            <span class="craft-result" data-image="${resultItem.image}">
               <img src="${resultItem.image}" alt="${resultItem.name}">
               <span class="name">${resultItem.name}</span>
             </span>
@@ -414,6 +415,15 @@
           <div class="craft-cost">💰 Стоимость: ${recipe.cost || '—'}</div>
         `;
         container.appendChild(item);
+      });
+
+      // Добавляем обработчики клика для всех кликабельных элементов внутри рецептов
+      container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const imgSrc = this.dataset.image;
+          if (imgSrc) openModal(imgSrc);
+        });
       });
     }
 
