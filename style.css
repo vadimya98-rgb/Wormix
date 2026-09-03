@@ -10,26 +10,23 @@
 body {
   font-family: system-ui, -apple-system, sans-serif;
   min-height: 100vh;
-  background: #0a0a1a;
   padding: 16px;
   color: #fff;
+  /* Яркий фон для всех страниц */
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #a855f7, #3b82f6);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
 }
 
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Убираем старый фон .main-bg, т.к. теперь фон у body */
 .main-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.main-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('https://iili.io/nHuGs7R.jpg') no-repeat center center/cover;
-  opacity: 0.5;
+  display: none;
 }
 
 .container {
@@ -46,13 +43,15 @@ header {
 
 h1 {
   font-size: 2.2rem;
-  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  background: linear-gradient(135deg, #fff, #fcd34d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(252, 211, 77, 0.3);
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0,0,0,0.5);
   font-size: 0.95rem;
   margin-top: 4px;
 }
@@ -70,23 +69,23 @@ h1 {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 24px;
   text-decoration: none;
   color: #fff;
   font-weight: 700;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .menu-btn:hover {
-  transform: scale(1.03);
-  border-color: #818cf8;
-  box-shadow: 0 0 40px rgba(79, 70, 229, 0.3);
+  transform: scale(1.06);
+  border-color: #fff;
+  box-shadow: 0 0 40px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.4);
 }
 
 .menu-btn::before {
@@ -123,6 +122,29 @@ h1 {
   background: url('https://iili.io/nHuMZaj.jpg') no-repeat center center/cover;
 }
 
+/* ===== ЦВЕТНЫЕ АКЦЕНТЫ У КНОПОК ===== */
+.menu-btn[data-char="dragon"] {
+  border-color: #ff6b6b;
+}
+.menu-btn[data-char="demon"] {
+  border-color: #a855f7;
+}
+.menu-btn[data-char="robot"] {
+  border-color: #3b82f6;
+}
+.menu-btn[data-char="cat"] {
+  border-color: #fcd34d;
+}
+.menu-btn[data-char="dog"] {
+  border-color: #4ecdc4;
+}
+.menu-btn[data-char="hare"] {
+  border-color: #f472b6;
+}
+.menu-btn[data-char="zombie"] {
+  border-color: #34d399;
+}
+
 .menu-btn .btn-label {
   position: relative;
   z-index: 2;
@@ -132,11 +154,9 @@ h1 {
   letter-spacing: 1px;
   color: #fff;
   text-shadow: 
-    0 0 20px rgba(0, 0, 0, 0.95),
-    0 0 40px rgba(0, 0, 0, 0.8),
-    0 4px 8px rgba(0, 0, 0, 0.9),
-    0 0 15px rgba(79, 70, 229, 0.6),
-    0 0 30px rgba(79, 70, 229, 0.3);
+    0 0 20px rgba(0,0,0,0.9),
+    0 4px 8px rgba(0,0,0,0.8),
+    0 0 40px rgba(255,255,255,0.1);
   text-align: center;
   line-height: 1.3;
 }
@@ -150,22 +170,29 @@ h1 {
   100% { transform: scale(0.95); box-shadow: 0 0 0px rgba(255, 200, 0, 0); }
 }
 
+/* ========================================
+   НАВИГАЦИЯ НА ВНУТРЕННИХ СТРАНИЦАХ
+======================================== */
 .top-nav {
   margin-bottom: 16px;
 }
 .back-btn {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.15);
   padding: 8px 18px;
   border-radius: 40px;
   color: #fff;
   text-decoration: none;
   font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
 }
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.25);
 }
 
+/* ========================================
+   ВКЛАДКИ (АРСЕНАЛ, ШАПКИ, АРТЕФАКТЫ)
+======================================== */
 .tabs {
   display: flex;
   gap: 10px;
@@ -174,10 +201,10 @@ h1 {
 }
 .tab-btn {
   padding: 10px 20px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 40px;
   background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
+  color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -187,10 +214,10 @@ h1 {
   max-width: 180px;
 }
 .tab-btn.active {
-  background: rgba(79, 70, 229, 0.3);
-  border-color: #818cf8;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
   color: #fff;
-  box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 0 30px rgba(255,255,255,0.2);
 }
 .tab-btn:active {
   transform: scale(0.95);
@@ -202,6 +229,9 @@ h1 {
   display: block;
 }
 
+/* ========================================
+   КАРТОЧКИ
+======================================== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -210,9 +240,9 @@ h1 {
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 16px 12px;
   text-align: center;
@@ -221,15 +251,15 @@ h1 {
 }
 .card:hover {
   transform: translateY(-4px);
-  border-color: #818cf8;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 .card-icon img {
   width: 64px;
   height: 64px;
   object-fit: contain;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
   padding: 6px;
 }
 .card h3 {
@@ -239,17 +269,20 @@ h1 {
 }
 .card .info {
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: rgba(255,255,255,0.8);
   line-height: 1.4;
 }
 .card .comment {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: rgba(255,255,255,0.6);
   margin-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 8px;
 }
 
+/* ========================================
+   АДАПТАЦИЯ ПОД ТЕЛЕФОН
+======================================== */
 @media (max-width: 480px) {
   .menu-btn {
     aspect-ratio: 1 / 1;
@@ -266,94 +299,5 @@ h1 {
     font-size: 0.8rem;
     padding: 8px 12px;
     max-width: 140px;
-  }
-}
-
-/* ========================================
-   ЯРКАЯ ГЛАВНАЯ СТРАНИЦА (только для .home)
-======================================== */
-body.home {
-  background: #0a0a1a; /* запасной фон */
-}
-
-body.home .main-bg {
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #a855f7, #3b82f6);
-  background-size: 400% 400%;
-  animation: gradientMove 15s ease infinite;
-  z-index: 0;
-}
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-body.home .main-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.1"><circle cx="40" cy="40" r="30" fill="%23fff"/><circle cx="160" cy="120" r="40" fill="%23fff"/></svg>');
-  background-size: 300px 300px;
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-body.home h1 {
-  background: linear-gradient(135deg, #fff, #fcd34d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(252, 211, 77, 0.3);
-}
-
-body.home .subtitle {
-  color: #fff;
-  text-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-body.home .menu-btn {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-  transition: all 0.3s ease;
-}
-
-body.home .menu-btn:hover {
-  transform: scale(1.06);
-  border-color: #fff;
-  box-shadow: 0 0 40px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.4);
-}
-
-body.home .menu-btn[data-char="dragon"] {
-  border-color: #ff6b6b;
-}
-body.home .menu-btn[data-char="demon"] {
-  border-color: #a855f7;
-}
-body.home .menu-btn[data-char="robot"] {
-  border-color: #3b82f6;
-}
-body.home .menu-btn[data-char="cat"] {
-  border-color: #fcd34d;
-}
-body.home .menu-btn[data-char="dog"] {
-  border-color: #4ecdc4;
-}
-
-body.home .menu-btn .btn-label {
-  text-shadow: 
-    0 0 20px rgba(0,0,0,0.9),
-    0 4px 8px rgba(0,0,0,0.8),
-    0 0 40px rgba(255,255,255,0.1);
-}
-
-body.home .menu-btn:active {
-  animation: explode 0.4s ease forwards;
-}
-
-@media (max-width: 480px) {
-  body.home .menu-btn .btn-label {
-    font-size: 1.0rem;
   }
 }
