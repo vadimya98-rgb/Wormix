@@ -952,8 +952,9 @@ const upgradeWeapons = [
   }
 ];
 
+
 // ===========================================
-//   ШАПКИ (61 вид)
+//   ШАПКИ (база) — 61 вид
 // ===========================================
 const hats = [
   { id: 1, image: "https://iili.io/nH401DB.jpg", name: "Шапка #1" },
@@ -1018,8 +1019,9 @@ const hats = [
   { id: 60, image: "https://iili.io/nH4SvPs.jpg", name: "Шапка #60" },
   { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "Шапка #61" }
 ];
+
 // ===========================================
-//   ШАПКИ ЗА БОССОВ
+//   ШАПКИ ЗА БОССОВ (21 вид)
 // ===========================================
 const bossHats = [
   { id: 1, image: "https://iili.io/nHignUu.jpg", name: "Шаман вуду" },
@@ -1044,8 +1046,9 @@ const bossHats = [
   { id: 20, image: "https://iili.io/nHirJrF.jpg", name: "Телепат" },
   { id: 21, image: "https://iili.io/nHir2dg.jpg", name: "Фантомы" }
 ];
+
 // ===========================================
-//   АРТЕФАКТЫ (база)
+//   АРТЕФАКТЫ (база) — 17 видов
 // ===========================================
 const artifacts = [
   { id: 1, image: "https://iili.io/nHL0QGp.jpg", name: "Артефакт #1" },
@@ -1066,9 +1069,9 @@ const artifacts = [
   { id: 16, image: "https://iili.io/nHL11DJ.jpg", name: "Артефакт #16" },
   { id: 17, image: "https://iili.io/nHL1hlI.jpg", name: "Артефакт #17" }
 ];
-const artifacts = [];
+
 // ===========================================
-//   АРТЕФАКТЫ ЗА БОССОВ
+//   АРТЕФАКТЫ ЗА БОССОВ (4 вида)
 // ===========================================
 const bossArtifacts = [
   { id: 1, image: "https://iili.io/nHirKmv.jpg", name: "Архидемон" },
@@ -1076,3 +1079,9 @@ const bossArtifacts = [
   { id: 3, image: "https://iili.io/nHig6q7.jpg", name: "Ученый" },
   { id: 4, image: "https://iili.io/nHigvef.jpg", name: "Архибот" }
 ];
+
+// ===========================================
+//   РЕЦЕПТЫ СБОРКИ (пока пустые, добавятся позже)
+// ===========================================
+const hatCraftRecipes = [];
+const artifactCraftRecipes = [];
