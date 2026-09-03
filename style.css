@@ -12,7 +12,6 @@ body {
   min-height: 100vh;
   padding: 16px;
   color: #fff;
-  /* Приглушённый тёмный градиент – текст будет виден отлично */
   background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
   background-size: 400% 400%;
   animation: gradientMove 20s ease infinite;
@@ -96,26 +95,27 @@ h1 {
   transition: 0.3s;
 }
 
+/* ===== ПЕРСОНАЖИ (НОВЫЕ ССЫЛКИ) ===== */
 .menu-btn[data-char="dragon"]::before {
-  background: url('https://iili.io/nHuMPn9.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/Pvs3f2sr/Screenshot-20260902-161443-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="demon"]::before {
-  background: url('https://iili.io/nHuMs6u.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/Y4DSnW4d/Screenshot-20260902-161455-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="robot"]::before {
-  background: url('https://iili.io/nHuM4Z7.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/KzxwXpwc/Screenshot-20260902-161448-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="cat"]::before {
-  background: url('https://iili.io/nHuMt8x.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/trCgGvK/Screenshot-20260902-161503-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="dog"]::before {
-  background: url('https://iili.io/nHuMrjS.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/ZpFR7BGc/Screenshot-20260902-161452-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="hare"]::before {
-  background: url('https://iili.io/nHuMQ3b.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/T6zYKPq/Screenshot-20260902-161458-Wormix.jpg') no-repeat center center/cover;
 }
 .menu-btn[data-char="zombie"]::before {
-  background: url('https://iili.io/nHuMZaj.jpg') no-repeat center center/cover;
+  background: url('https://i.ibb.co/LX3yMQNm/Screenshot-20260902-161500-Wormix.jpg') no-repeat center center/cover;
 }
 
 .menu-btn[data-char="dragon"] { border-color: #f87171; }
