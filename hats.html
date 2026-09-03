@@ -181,15 +181,15 @@
     <h1>🧢 Шапки</h1>
     <p class="subtitle">Все шапки в Wormix Mobile</p>
 
-    <!-- КНОПКИ-ВКЛАДКИ -->
+    <!-- КНОПКИ-ВКЛАДКИ: БАЗА → ЗА БОССА → СБОРКА -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="base">📦 База</button>
+      <button class="tab-btn" data-tab="boss">👹 За Босса</button>
       <button class="tab-btn" data-tab="craft">🔧 Сборка</button>
     </div>
 
     <!-- ===== ВКЛАДКА "БАЗА" ===== -->
     <div id="base-tab" class="tab-content active">
-      <!-- ПОДСКАЗКА -->
       <p style="
         color: #cbd5e1;
         text-align: center;
@@ -207,13 +207,26 @@
       <div id="hats-list" class="hats-list"></div>
     </div>
 
+    <!-- ===== ВКЛАДКА "ЗА БОССА" ===== -->
+    <div id="boss-tab" class="tab-content">
+      <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
+        👹 Шапки, которые можно получить за прохождение боссов
+      </p>
+      <div id="boss-hats-list" class="hats-list">
+        <div class="card" style="justify-content: center; cursor: default; opacity: 0.7;">
+          <div style="color: #94a3b8; text-align: center; padding: 20px;">
+            🏆 Скоро здесь появятся шапки за боссов
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== ВКЛАДКА "СБОРКА" ===== -->
     <div id="craft-tab" class="tab-content">
       <p style="color: #94a3b8; text-align: center; margin-bottom: 12px;">
         🔧 Рецепты сборки шапок (скоро добавятся)
       </p>
       <div class="craft-grid">
-        <!-- Пример рецепта (можно удалить или заменить) -->
         <div class="craft-item">
           <div class="parts">
             <span class="part">Колода карт</span>
@@ -229,13 +242,12 @@
           </div>
           <div class="lottery-note">Выбить легу почти как выиграть в лотерею, шансы никому не известны</div>
         </div>
-        <!-- Добавь свои рецепты сюда -->
       </div>
     </div>
 
   </div>
 
-  <!-- Модальное окно для просмотра изображения -->
+  <!-- Модальное окно -->
   <div id="imageModal" class="image-modal" onclick="closeModal()">
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <img id="modalImage" src="" alt="Увеличенное изображение">
@@ -243,7 +255,6 @@
 
   <script src="data.js"></script>
   <script>
-    // Функция отображения шапок (для вкладки "База")
     function renderHats() {
       const container = document.getElementById('hats-list');
       if (!container) return;
@@ -259,7 +270,6 @@
           <div class="card-icon"><img src="${h.image}" alt="${h.name}" loading="lazy"></div>
           <h3>${h.name}</h3>
         `;
-        // Открываем модальное окно при клике на карточку
         card.addEventListener('click', function(e) {
           e.stopPropagation();
           openModal(h.image);
@@ -268,28 +278,24 @@
       });
     }
 
-    // Функция открытия модального окна
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
       modalImg.src = imageSrc;
       modal.classList.add('active');
-      document.body.style.overflow = 'hidden'; // запрещаем скролл
+      document.body.style.overflow = 'hidden';
     }
 
-    // Функция закрытия модального окна
     function closeModal() {
       const modal = document.getElementById('imageModal');
       modal.classList.remove('active');
-      document.body.style.overflow = ''; // восстанавливаем скролл
+      document.body.style.overflow = '';
     }
 
-    // Закрытие по клавише Escape
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
 
-    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -300,7 +306,6 @@
       });
     });
 
-    // Запуск
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('hats-list')) renderHats();
     });
