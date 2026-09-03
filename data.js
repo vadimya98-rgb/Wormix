@@ -1018,20 +1018,20 @@ const hats = [
   { id: 60, image: "https://iili.io/nH4SvPs.jpg", name: "черный ворон" },
   { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "шляпа вампира" },
 
-  // ===== Итоговые шапки (13 штук) – обновлённые ссылки =====
-{ id: 62, image: "https://iili.io/nHtwiu4.jpg", name: "головной убор комиссара" },
-{ id: 63, image: "https://iili.io/nHtw48G.jpg", name: "горящий череп" },
-{ id: 64, image: "https://iili.io/nHtwS6X.jpg", name: "шлем спецназа" },
-{ id: 65, image: "https://iili.io/nHtw8Gt.jpg", name: "респиратор" },
-{ id: 66, image: "https://iili.io/nHtwvnI.jpg", name: "шлем адского гонщика" },
-{ id: 67, image: "https://iili.io/nHtwjyv.jpg", name: "окуляр" },
-{ id: 68, image: "https://iili.io/nHtwh8J.jpg", name: "шлем псайкера" },
-{ id: 69, image: "https://iili.io/nHtwXaa.jpg", name: "ворон" },
-{ id: 70, image: "https://iili.io/nHtwM6F.jpg", name: "зловещий образ" },
-{ id: 71, image: "https://iili.io/nHtwljV.jpg", name: "скандинавский шлем" },
-{ id: 72, image: "https://iili.io/nHtwECP.jpg", name: "шлем чемпиона" },
-{ id: 73, image: "https://iili.io/nHtw0ZB.jpg", name: "самурайский шлем" },
-{ id: 74, image: "https://iili.io/nHtwGG1.jpg", name: "шлем изверга" }
+  // ===== Итоговые шапки (13 штук) =====
+  { id: 62, image: "https://iili.io/nHtwiu4.jpg", name: "головной убор комиссара" },
+  { id: 63, image: "https://iili.io/nHtw48G.jpg", name: "горящий череп" },
+  { id: 64, image: "https://iili.io/nHtwS6X.jpg", name: "шлем спецназа" },
+  { id: 65, image: "https://iili.io/nHtw8Gt.jpg", name: "респиратор" },
+  { id: 66, image: "https://iili.io/nHtwvnI.jpg", name: "шлем адского гонщика" },
+  { id: 67, image: "https://iili.io/nHtwjyv.jpg", name: "окуляр" },
+  { id: 68, image: "https://iili.io/nHtwh8J.jpg", name: "шлем псайкера" },
+  { id: 69, image: "https://iili.io/nHtwXaa.jpg", name: "ворон" },
+  { id: 70, image: "https://iili.io/nHtwM6F.jpg", name: "зловещий образ" },
+  { id: 71, image: "https://iili.io/nHtwljV.jpg", name: "скандинавский шлем" },
+  { id: 72, image: "https://iili.io/nHtwECP.jpg", name: "шлем чемпиона" },
+  { id: 73, image: "https://iili.io/nHtw0ZB.jpg", name: "самурайский шлем" },
+  { id: 74, image: "https://iili.io/nHtwGG1.jpg", name: "шлем изверга" }
 ];
 
 // ===========================================
