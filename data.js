@@ -1065,23 +1065,23 @@ const bossHats = [
 //   АРТЕФАКТЫ (база) — 17 видов
 // ===========================================
 const artifacts = [
-  { id: 1, image: "https://iili.io/nHL0QGp.jpg", name: "Артефакт #1" },
-  { id: 2, image: "https://iili.io/nHL0Z6N.jpg", name: "Артефакт #2" },
-  { id: 3, image: "https://iili.io/nHL0m8X.jpg", name: "Артефакт #3" },
-  { id: 4, image: "https://iili.io/nHL0LnR.jpg", name: "Артефакт #4" },
-  { id: 5, image: "https://iili.io/nHL1HwG.jpg", name: "Артефакт #5" },
-  { id: 6, image: "https://iili.io/nHL1Jtf.jpg", name: "Артефакт #6" },
-  { id: 7, image: "https://iili.io/nHL13Ml.jpg", name: "Артефакт #7" },
-  { id: 8, image: "https://iili.io/nHL1FP2.jpg", name: "Артефакт #8" },
-  { id: 9, image: "https://iili.io/nHL1n9e.jpg", name: "Артефакт #9" },
-  { id: 10, image: "https://iili.io/nHL1oAu.jpg", name: "Артефакт #10" },
-  { id: 11, image: "https://iili.io/nHL1xwb.jpg", name: "Артефакт #11" },
-  { id: 12, image: "https://iili.io/nHL1ztj.jpg", name: "Артефакт #12" },
-  { id: 13, image: "https://iili.io/nHL1APV.jpg", name: "Артефакт #13" },
-  { id: 14, image: "https://iili.io/nHL17cP.jpg", name: "Артефакт #14" },
-  { id: 15, image: "https://iili.io/nHL1cHF.jpg", name: "Артефакт #15" },
-  { id: 16, image: "https://iili.io/nHL11DJ.jpg", name: "Артефакт #16" },
-  { id: 17, image: "https://iili.io/nHL1hlI.jpg", name: "Артефакт #17" }
+  { id: 1, image: "https://iili.io/nHL0QGp.jpg", name: "каменный молот" },
+  { id: 2, image: "https://iili.io/nHL0Z6N.jpg", name: "ледяной клык" },
+  { id: 3, image: "https://iili.io/nHL0m8X.jpg", name: "пиратский крюк" },
+  { id: 4, image: "https://iili.io/nHL0LnR.jpg", name: "вампирский меч" },
+  { id: 5, image: "https://iili.io/nHL1HwG.jpg", name: "пила" },
+  { id: 6, image: "https://iili.io/nHL1Jtf.jpg", name: "тотем яда" },
+  { id: 7, image: "https://iili.io/nHL13Ml.jpg", name: "робощит" },
+  { id: 8, image: "https://iili.io/nHL1FP2.jpg", name: "тотем огня" },
+  { id: 9, image: "https://iili.io/nHL1n9e.jpg", name: "посох с черепушкой" },
+  { id: 10, image: "https://iili.io/nHL1oAu.jpg", name: "световой меч" },
+  { id: 11, image: "https://iili.io/nHL1xwb.jpg", name: "ловец снов" },
+  { id: 12, image: "https://iili.io/nHL1ztj.jpg", name: "меч Палладина" },
+  { id: 13, image: "https://iili.io/nHL1APV.jpg", name: "железный щит" },
+  { id: 14, image: "https://iili.io/nHL17cP.jpg", name: "сломанный меч" },
+  { id: 15, image: "https://iili.io/nHL1cHF.jpg", name: "тренировочный щит" },
+  { id: 16, image: "https://iili.io/nHL11DJ.jpg", name: "деревянный щит" },
+  { id: 17, image: "https://iili.io/nHL1hlI.jpg", name: "короткий меч" }
 ];
 
 // ===========================================
