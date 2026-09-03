@@ -1067,3 +1067,12 @@ const artifacts = [
   { id: 17, image: "https://iili.io/nHL1hlI.jpg", name: "Артефакт #17" }
 ];
 const artifacts = [];
+// ===========================================
+//   АРТЕФАКТЫ ЗА БОССОВ
+// ===========================================
+const bossArtifacts = [
+  { id: 1, image: "https://iili.io/nHirKmv.jpg", name: "Архидемон" },
+  { id: 2, image: "https://iili.io/nHigige.jpg", name: "Симбиот" },
+  { id: 3, image: "https://iili.io/nHig6q7.jpg", name: "Ученый" },
+  { id: 4, image: "https://iili.io/nHigvef.jpg", name: "Архибот" }
+];
