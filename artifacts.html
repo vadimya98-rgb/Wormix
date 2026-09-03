@@ -6,6 +6,7 @@
   <title>Артефакты — Wormix Guide</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Стили для списка артефактов (одна в строке) */
     .artifacts-list {
       display: flex;
       flex-direction: column;
@@ -51,6 +52,56 @@
       color: #fff;
     }
 
+    /* Сетка для артефактов за босса (2 в ряд) */
+    .boss-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .boss-grid .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .boss-grid .card:hover {
+      transform: translateY(-4px);
+      border-color: #fcd34d;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .boss-grid .card .card-icon {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 8px;
+    }
+    .boss-grid .card .card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .boss-grid .card h3 {
+      font-size: 0.9rem;
+      color: #fff;
+      margin: 0;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Модальное окно */
     .image-modal {
       display: none;
       position: fixed;
@@ -93,6 +144,7 @@
       transform: scale(1.2);
     }
 
+    /* Стили для сборки */
     .craft-grid {
       display: flex;
       flex-direction: column;
@@ -178,60 +230,41 @@
     <h1>⚡ Артефакты</h1>
     <p class="subtitle">Все артефакты в Wormix Mobile</p>
 
-    <!-- КНОПКИ-ВКЛАДКИ: БАЗА → ЗА БОССА → СБОРКА -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="base">📦 База</button>
       <button class="tab-btn" data-tab="boss">👹 За Босса</button>
       <button class="tab-btn" data-tab="craft">🔧 Сборка</button>
     </div>
 
-    <!-- ===== ВКЛАДКА "БАЗА" ===== -->
+    <!-- Вкладка "База" -->
     <div id="base-tab" class="tab-content active">
-      <p style="
-        color: #cbd5e1;
-        text-align: center;
-        font-style: italic;
-        font-size: 0.95rem;
-        background: rgba(255,255,255,0.05);
-        padding: 8px 12px;
-        border-radius: 40px;
-        margin-top: 8px;
-        border: 1px solid rgba(255,255,255,0.05);
-        backdrop-filter: blur(4px);
-      ">
+      <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
         👆 Нажми на иконку — она увеличится
       </p>
       <div id="artifacts-list" class="artifacts-list"></div>
     </div>
 
-    <!-- ===== ВКЛАДКА "ЗА БОССА" ===== -->
+    <!-- Вкладка "За Босса" -->
     <div id="boss-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Артефакты, которые можно получить за прохождение боссов
       </p>
-      <div id="boss-artifacts-list" class="artifacts-list">
-        <div class="card" style="justify-content: center; cursor: default; opacity: 0.7;">
-          <div style="color: #94a3b8; text-align: center; padding: 20px;">
-            🏆 Скоро здесь появятся артефакты за боссов
-          </div>
+      <div id="boss-artifacts-list" class="boss-grid">
+        <div class="card" style="justify-content:center; cursor:default; opacity:0.7; grid-column: 1 / -1;">
+          <div style="color:#94a3b8; text-align:center; padding:20px;">🏆 Скоро здесь появятся артефакты за боссов</div>
         </div>
       </div>
     </div>
 
-    <!-- ===== ВКЛАДКА "СБОРКА" ===== -->
+    <!-- Вкладка "Сборка" -->
     <div id="craft-tab" class="tab-content">
-      <p style="color: #94a3b8; text-align: center; margin-bottom: 12px;">
-        🔧 Рецепты сборки артефактов (скоро добавятся)
-      </p>
+      <p style="color:#94a3b8; text-align:center; margin-bottom:12px;">🔧 Рецепты сборки артефактов (скоро добавятся)</p>
       <div class="craft-grid">
         <div class="craft-item">
           <div class="parts">
-            <span class="part">Древний свиток</span>
-            <span class="plus">+</span>
-            <span class="part">Зелье маны</span>
-            <span class="plus">+</span>
-            <span class="part">Кристалл</span>
-            <span class="equals">=</span>
+            <span class="part">Древний свиток</span><span class="plus">+</span>
+            <span class="part">Зелье маны</span><span class="plus">+</span>
+            <span class="part">Кристалл</span><span class="equals">=</span>
           </div>
           <div class="result">
             <span class="result-name">🔮 Амулет магии</span>
@@ -251,6 +284,7 @@
 
   <script src="data.js"></script>
   <script>
+    // Рендер артефактов из базы (список)
     function renderArtifacts() {
       const container = document.getElementById('artifacts-list');
       if (!container) return;
@@ -273,6 +307,9 @@
         container.appendChild(card);
       });
     }
+
+    // Рендер артефактов за босса (сетка 2 в ряд) – пока заглушка
+    // При появлении данных добавим аналогично bossHats
 
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
