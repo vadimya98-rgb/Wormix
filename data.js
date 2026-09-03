@@ -1030,7 +1030,7 @@ const hats = [
   { id: 70, image: "https://iili.io/nHtwM6F.jpg", name: "зловещий образ" },
   { id: 71, image: "https://iili.io/nHtwljV.jpg", name: "скандинавский шлем" },
   { id: 72, image: "https://iili.io/nHtwECP.jpg", name: "шлем чемпиона" },
-  { id: 73, image: "https://iili.io/nHtw0ZB.jpg", name: "самурайский шлем" },
+  { id: 73, image: "https://iili.io/nHtw0ZB.jpg", name: "самурайский" },
   { id: 74, image: "https://iili.io/nHtwGG1.jpg", name: "шлем изверга" }
 ];
 
@@ -1226,7 +1226,7 @@ const hatCraftRecipes = [
     { type: 'hat', name: 'самурайский шлем' },
     { type: 'emblem', count: 2 }
   ],
-  result: { name: 'самурайский шлем' },
+  result: { name: 'самурайский' },
   cost: "800 фузов / 8 рубинов"
 },
   {
