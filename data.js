@@ -1018,7 +1018,6 @@ const hats = [
   { id: 60, image: "https://iili.io/nH4SvPs.jpg", name: "Шапка #60" },
   { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "Шапка #61" }
 ];
-const hats = [];
 
 // ===========================================
 //   АРТЕФАКТЫ (пока пусто)
