@@ -12,10 +12,10 @@ body {
   min-height: 100vh;
   padding: 16px;
   color: #fff;
-  /* Яркий фон для всех страниц */
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #a855f7, #3b82f6);
+  /* Приглушённый тёмный градиент – текст будет виден отлично */
+  background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
   background-size: 400% 400%;
-  animation: gradientMove 15s ease infinite;
+  animation: gradientMove 20s ease infinite;
 }
 
 @keyframes gradientMove {
@@ -24,10 +24,7 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Убираем старый фон .main-bg, т.к. теперь фон у body */
-.main-bg {
-  display: none;
-}
+.main-bg { display: none; }
 
 .container {
   position: relative;
@@ -43,15 +40,15 @@ header {
 
 h1 {
   font-size: 2.2rem;
-  background: linear-gradient(135deg, #fff, #fcd34d);
+  background: linear-gradient(135deg, #f7f7fc, #c4b5fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(252, 211, 77, 0.3);
+  text-shadow: 0 0 40px rgba(196, 181, 253, 0.3);
 }
 
 .subtitle {
-  color: #fff;
-  text-shadow: 0 0 20px rgba(0,0,0,0.5);
+  color: #e2e8f0;
+  text-shadow: 0 0 20px rgba(0,0,0,0.7);
   font-size: 0.95rem;
   margin-top: 4px;
 }
@@ -69,23 +66,23 @@ h1 {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;
   text-decoration: none;
   color: #fff;
   font-weight: 700;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .menu-btn:hover {
   transform: scale(1.06);
-  border-color: #fff;
-  box-shadow: 0 0 40px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.4);
+  border-color: #a78bfa;
+  box-shadow: 0 0 40px rgba(167, 139, 250, 0.4), 0 8px 32px rgba(0,0,0,0.5);
 }
 
 .menu-btn::before {
@@ -99,7 +96,6 @@ h1 {
   transition: 0.3s;
 }
 
-/* ===== ПЕРСОНАЖИ ===== */
 .menu-btn[data-char="dragon"]::before {
   background: url('https://iili.io/nHuMPn9.jpg') no-repeat center center/cover;
 }
@@ -122,28 +118,13 @@ h1 {
   background: url('https://iili.io/nHuMZaj.jpg') no-repeat center center/cover;
 }
 
-/* ===== ЦВЕТНЫЕ АКЦЕНТЫ У КНОПОК ===== */
-.menu-btn[data-char="dragon"] {
-  border-color: #ff6b6b;
-}
-.menu-btn[data-char="demon"] {
-  border-color: #a855f7;
-}
-.menu-btn[data-char="robot"] {
-  border-color: #3b82f6;
-}
-.menu-btn[data-char="cat"] {
-  border-color: #fcd34d;
-}
-.menu-btn[data-char="dog"] {
-  border-color: #4ecdc4;
-}
-.menu-btn[data-char="hare"] {
-  border-color: #f472b6;
-}
-.menu-btn[data-char="zombie"] {
-  border-color: #34d399;
-}
+.menu-btn[data-char="dragon"] { border-color: #f87171; }
+.menu-btn[data-char="demon"] { border-color: #a78bfa; }
+.menu-btn[data-char="robot"] { border-color: #60a5fa; }
+.menu-btn[data-char="cat"] { border-color: #fbbf24; }
+.menu-btn[data-char="dog"] { border-color: #34d399; }
+.menu-btn[data-char="hare"] { border-color: #f472b6; }
+.menu-btn[data-char="zombie"] { border-color: #6ee7b7; }
 
 .menu-btn .btn-label {
   position: relative;
@@ -154,9 +135,9 @@ h1 {
   letter-spacing: 1px;
   color: #fff;
   text-shadow: 
-    0 0 20px rgba(0,0,0,0.9),
-    0 4px 8px rgba(0,0,0,0.8),
-    0 0 40px rgba(255,255,255,0.1);
+    0 0 30px rgba(0,0,0,0.95),
+    0 4px 12px rgba(0,0,0,0.9),
+    0 0 60px rgba(255,255,255,0.1);
   text-align: center;
   line-height: 1.3;
 }
@@ -170,14 +151,11 @@ h1 {
   100% { transform: scale(0.95); box-shadow: 0 0 0px rgba(255, 200, 0, 0); }
 }
 
-/* ========================================
-   НАВИГАЦИЯ НА ВНУТРЕННИХ СТРАНИЦАХ
-======================================== */
 .top-nav {
   margin-bottom: 16px;
 }
 .back-btn {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   padding: 8px 18px;
   border-radius: 40px;
   color: #fff;
@@ -190,9 +168,6 @@ h1 {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* ========================================
-   ВКЛАДКИ (АРСЕНАЛ, ШАПКИ, АРТЕФАКТЫ)
-======================================== */
 .tabs {
   display: flex;
   gap: 10px;
@@ -204,7 +179,7 @@ h1 {
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 40px;
   background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  color: #e2e8f0;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -214,10 +189,10 @@ h1 {
   max-width: 180px;
 }
 .tab-btn.active {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #a78bfa;
   color: #fff;
-  box-shadow: 0 0 30px rgba(255,255,255,0.2);
+  box-shadow: 0 0 30px rgba(167, 139, 250, 0.2);
 }
 .tab-btn:active {
   transform: scale(0.95);
@@ -229,9 +204,6 @@ h1 {
   display: block;
 }
 
-/* ========================================
-   КАРТОЧКИ
-======================================== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -242,7 +214,7 @@ h1 {
 .card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   padding: 16px 12px;
   text-align: center;
@@ -251,15 +223,15 @@ h1 {
 }
 .card:hover {
   transform: translateY(-4px);
-  border-color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: #a78bfa;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .card-icon img {
   width: 64px;
   height: 64px;
   object-fit: contain;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   padding: 6px;
 }
 .card h3 {
@@ -269,20 +241,17 @@ h1 {
 }
 .card .info {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.8);
+  color: #cbd5e1;
   line-height: 1.4;
 }
 .card .comment {
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.6);
+  color: #94a3b8;
   margin-top: 8px;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.05);
   padding-top: 8px;
 }
 
-/* ========================================
-   АДАПТАЦИЯ ПОД ТЕЛЕФОН
-======================================== */
 @media (max-width: 480px) {
   .menu-btn {
     aspect-ratio: 1 / 1;
