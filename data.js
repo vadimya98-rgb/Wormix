@@ -767,7 +767,7 @@ const consumableWeapons = [
 ];
 
 // ===========================================
-//   АПГРЕЙД ПУШЕК (лучшие улучшения) — 15 видов
+//   АПГРЕЙД ПУШЕК (15 видов)
 // ===========================================
 const upgradeWeapons = [
   {
@@ -952,11 +952,11 @@ const upgradeWeapons = [
   }
 ];
 
-
 // ===========================================
-//   ШАПКИ (база) — 61 вид
+//   ШАПКИ (база) — 61 вид + 13 итоговых = 74
 // ===========================================
 const hats = [
+  // ===== Первые 61 шапка (ваши) =====
   { id: 1, image: "https://iili.io/nH401DB.jpg", name: "Шапка #1" },
   { id: 2, image: "https://iili.io/nH40ViF.jpg", name: "Шапка #2" },
   { id: 3, image: "https://iili.io/nH40NHv.jpg", name: "Шапка #3" },
@@ -1017,7 +1017,22 @@ const hats = [
   { id: 58, image: "https://iili.io/nH4SEPa.jpg", name: "Шапка #58" },
   { id: 59, image: "https://iili.io/nH4Sh9p.jpg", name: "Шапка #59" },
   { id: 60, image: "https://iili.io/nH4SvPs.jpg", name: "Шапка #60" },
-  { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "Шапка #61" }
+  { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "Шапка #61" },
+
+  // ===== Итоговые шапки (13 штук) =====
+  { id: 62, image: "https://iili.io/nHtwGG1.jpg", name: "головной убор комиссара" },
+  { id: 63, image: "https://iili.io/nHtw0ZB.jpg", name: "горящий череп" },
+  { id: 64, image: "https://iili.io/nHtwECP.jpg", name: "шлем спецназа" },
+  { id: 65, image: "https://iili.io/nHtwljV.jpg", name: "респиратор" },
+  { id: 66, image: "https://iili.io/nHtwM6F.jpg", name: "шлем адского гонщика" },
+  { id: 67, image: "https://iili.io/nHtwXaa.jpg", name: "окуляр" },
+  { id: 68, image: "https://iili.io/nHtwh8J.jpg", name: "шлем псайкера" },
+  { id: 69, image: "https://iili.io/nHtwjyv.jpg", name: "ворон" },
+  { id: 70, image: "https://iili.io/nHtwvnI.jpg", name: "зловещий образ" },
+  { id: 71, image: "https://iili.io/nHtw8Gt.jpg", name: "скандинавский шлем" },
+  { id: 72, image: "https://iili.io/nHtwS6X.jpg", name: "шлем чемпиона" },
+  { id: 73, image: "https://iili.io/nHtw48G.jpg", name: "самурайский шлем" },
+  { id: 74, image: "https://iili.io/nHtwiu4.jpg", name: "шлем изверга" }
 ];
 
 // ===========================================
@@ -1081,7 +1096,7 @@ const bossArtifacts = [
 ];
 
 // ===========================================
-//   ЭМБЛЕМА ВОРМИКС (для рецептов)
+//   ЭМБЛЕМА ВОРМИКС
 // ===========================================
 const wormixEmblem = {
   image: "https://iili.io/nHtWyIS.jpg",
@@ -1230,6 +1245,4 @@ const hatCraftRecipes = [
 // ===========================================
 //   РЕЦЕПТЫ ДЛЯ АРТЕФАКТОВ (пока пусто)
 // ===========================================
-const artifactCraftRecipes = [];
-const hatCraftRecipes = [];
 const artifactCraftRecipes = [];
