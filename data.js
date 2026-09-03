@@ -1212,9 +1212,9 @@ const hatCraftRecipes = [
   {
     id: 11,
     ingredients: [
-      { type: 'hat', name: 'меч Палладина' },
+      { type: 'artifact', name: 'меч Палладина' },
       { type: 'hat', name: 'нимб' },
-      { type: 'hat', name: 'ловец снов' },
+      { type: 'artifact', name: 'ловец снов' },
       { type: 'emblem', count: 8 }
     ],
     result: { name: 'шлем чемпиона' },
