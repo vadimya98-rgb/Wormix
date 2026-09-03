@@ -1182,7 +1182,7 @@ const hatCraftRecipes = [
     ingredients: [
       { type: 'hat', name: 'черный ворон' },
       { type: 'hat', name: 'крик' },
-      { type: 'hat', name: 'шапка Алхимика' },
+      { type: 'bossHat', name: 'шапка Алхимика' },
       { type: 'emblem', count: 6 }
     ],
     result: { name: 'ворон' },
