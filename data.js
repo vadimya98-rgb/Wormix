@@ -1406,7 +1406,7 @@ const bossHats = [
     {
         id: 15,
         image: "https://i.ibb.co/2bzN3F1/Screenshot-20260903-130541-Wormix.jpg",
-        name: "Алхимик"
+        name: "шапка Алхимика"
     },
     {
         id: 16,
