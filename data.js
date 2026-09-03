@@ -1441,7 +1441,7 @@ const bossHats = [
 ];
 
 // ============================================
-//    АРТЕФАКТЫ (база) — 17 видов
+//    АРТЕФАКТЫ (база + итоговые) — 19 видов
 // ============================================
 const artifacts = [
     {
@@ -1528,6 +1528,17 @@ const artifacts = [
         id: 17,
         image: "https://i.ibb.co/FkJzFS02/Screenshot-20260903-133545-Wormix.jpg",
         name: "короткий меч"
+    },
+    // ===== ИТОГОВЫЕ АРТЕФАКТЫ (результаты сборки) =====
+    {
+        id: 18,
+        image: "https://i.ibb.co/m5N66rNx/Screenshot-20260903-141729-Wormix.jpg",
+        name: "змеиный посох"
+    },
+    {
+        id: 19,
+        image: "https://i.ibb.co/gMFGpvNK/Screenshot-20260903-141720-Wormix.jpg",
+        name: "ледяной щит"
     }
 ];
 
@@ -1707,4 +1718,25 @@ const hatCraftRecipes = [
 // ===========================================
 //   РЕЦЕПТЫ ДЛЯ АРТЕФАКТОВ (пока пусто)
 // ===========================================
-const artifactCraftRecipes = [];
+const artifactCraftRecipes = [
+    {
+        id: 1,
+        ingredients: [
+            { type: 'artifact', name: 'посох с черепушкой' },
+            { type: 'artifact', name: 'световой меч' },
+            { type: 'emblem', count: 7 }
+        ],
+        result: { name: 'змеиный посох' },
+        cost: "1800 фузов / 18 рубинов"
+    },
+    {
+        id: 2,
+        ingredients: [
+            { type: 'artifact', name: 'робощит' },
+            { type: 'artifact', name: 'ледяной клык' },
+            { type: 'emblem', count: 6 }
+        ],
+        result: { name: 'ледяной щит' },
+        cost: "1600 фузов / 16 рубинов"
+    }
+];
