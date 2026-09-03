@@ -6,7 +6,6 @@
   <title>Артефакты — Wormix Guide</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Стили для списка артефактов (одна в строке) */
     .artifacts-list {
       display: flex;
       flex-direction: column;
@@ -52,7 +51,6 @@
       color: #fff;
     }
 
-    /* Сетка для артефактов за босса (2 в ряд) */
     .boss-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -101,7 +99,6 @@
       line-height: 1.2;
     }
 
-    /* Модальное окно */
     .image-modal {
       display: none;
       position: fixed;
@@ -144,7 +141,6 @@
       transform: scale(1.2);
     }
 
-    /* Стили для сборки */
     .craft-grid {
       display: flex;
       flex-direction: column;
@@ -280,7 +276,6 @@
 
   <script src="data.js"></script>
   <script>
-    // Рендер артефактов из базы (список)
     function renderArtifacts() {
       const container = document.getElementById('artifacts-list');
       if (!container) return;
@@ -304,7 +299,6 @@
       });
     }
 
-    // Рендер артефактов за босса (сетка 2 в ряд)
     function renderBossArtifacts() {
       const container = document.getElementById('boss-artifacts-list');
       if (!container) return;
@@ -328,7 +322,6 @@
       });
     }
 
-    // Модальное окно
     function openModal(imageSrc) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
@@ -347,7 +340,6 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -358,7 +350,6 @@
       });
     });
 
-    // Запуск
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('artifacts-list')) renderArtifacts();
       if (document.getElementById('boss-artifacts-list')) renderBossArtifacts();
