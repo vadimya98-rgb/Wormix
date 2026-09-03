@@ -6,55 +6,10 @@
   <title>Мини-игра — Wormix Guide</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0a0a1a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: system-ui, sans-serif;
-      user-select: none;
-      overflow: hidden;
-    }
-    .game-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      aspect-ratio: 9 / 16;
-      background: #1a1a2e;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 0 60px rgba(79, 70, 229, 0.3);
-    }
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      background: #2d1b3d;
-      cursor: pointer;
-      touch-action: none;
-    }
-    .back-btn {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 10;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      border: none;
-      border-radius: 30px;
-      padding: 6px 16px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.15);
-      text-decoration: none;
-    }
-    .back-btn:hover {
-      background: rgba(255,255,255,0.15);
-    }
+    body { margin:0; padding:0; background:#0a0a1a; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:system-ui, sans-serif; user-select:none; overflow:hidden; }
+    .game-wrapper { position:relative; width:100%; max-width:400px; aspect-ratio:9/16; background:#1a1a2e; border-radius:24px; overflow:hidden; box-shadow:0 0 60px rgba(79,70,229,0.3); }
+    canvas { display:block; width:100%; height:100%; background:#2d1b3d; cursor:pointer; touch-action:none; }
+    .back-btn { position:absolute; top:12px; left:12px; z-index:10; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:30px; padding:6px 16px; font-size:0.8rem; cursor:pointer; backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.15); text-decoration:none; }
   </style>
 </head>
 <body>
@@ -64,33 +19,38 @@
 </div>
 <script>
   // ============================================================
-  // 1. НАСТРОЙКИ И ПОЛУЧЕНИЕ КОНТЕКСТА
+  // 1. НАСТРОЙКИ И КАНВАС
   // ============================================================
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-
   let W, H;
 
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width * devicePixelRatio;
-    canvas.height = rect.height * devicePixelRatio;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
     W = canvas.width;
     H = canvas.height;
+    ctx.scale(1, 1); // сброс трансформаций
   }
   window.addEventListener('resize', resize);
   resize();
 
   // ============================================================
-  // 2. ИЗОБРАЖЕНИЯ (загружаем из твоих ссылок)
+  // 2. ЗАГРУЗКА ИЗОБРАЖЕНИЙ (с crossOrigin)
   // ============================================================
   function loadImage(src) {
     return new Promise((resolve) => {
       const img = new Image();
+      img.crossOrigin = 'anonymous';
       img.onload = () => resolve(img);
-      img.onerror = () => resolve(null);
+      img.onerror = () => {
+        console.warn('Не удалось загрузить:', src);
+        resolve(null);
+      };
       img.src = src;
     });
   }
@@ -103,7 +63,6 @@
     dog: 'https://iili.io/nHuMrjS.jpg',
     zombie: 'https://iili.io/nHuMZaj.jpg',
     hare: 'https://iili.io/nHuMQ3b.jpg',
-    // Для базуки используем эмодзи
   };
 
   let images = {};
@@ -118,55 +77,26 @@
   // ============================================================
   // 3. ИГРОВАЯ ЛОГИКА
   // ============================================================
-  // Состояния игры
   const STATE = { MENU: 0, PLAYING: 1, GAMEOVER: 2 };
   let state = STATE.MENU;
 
-  // Параметры
-  const GRAVITY = 0;
-  const FRICTION = 0.98;
-
-  // Игрок (кот)
-  let player = {
-    x: 0, y: 0,
-    radius: 24,
-    side: 0, // -1 левая, 1 правая
-    speed: 4,
-    targetSide: 0,
-  };
-
-  // Монеты
+  let player = { x: 0, y: 0, radius: 24, side: 0 };
   let coins = [];
   let coinCount = 0;
-
-  // Враги
   let enemies = [];
-  let enemySpawnTimer = 0;
-  let enemySpawnInterval = 120; // кадров
-  let maxEnemies = 3;
-
-  // Снаряды
   let bullets = [];
-
-  // Расстояние
   let distance = 0;
   let gameTime = 0;
-
-  // Сложность
   let difficulty = 1;
+  let enemySpawnTimer = 0;
+  let enemySpawnInterval = 120;
+  let maxEnemies = 3;
+  let touchLeft = false, touchRight = false;
 
-  // Управление
-  let touchLeft = false;
-  let touchRight = false;
-
-  // ============================================================
-  // 4. ИНИЦИАЛИЗАЦИЯ ИГРЫ
-  // ============================================================
   function resetGame() {
     player.x = W / 2;
     player.y = H * 0.7;
-    player.side = 0;
-    player.targetSide = 0;
+    player.radius = 24;
     coins = [];
     coinCount = 0;
     enemies = [];
@@ -181,9 +111,6 @@
     touchRight = false;
   }
 
-  // ============================================================
-  // 5. СПАВН ВРАГОВ
-  // ============================================================
   function spawnEnemy() {
     const types = ['dragon', 'demon', 'robot', 'dog', 'zombie', 'hare'];
     const type = types[Math.floor(Math.random() * types.length)];
@@ -197,66 +124,40 @@
       side: side,
       shootTimer: 0,
       shootInterval: 60 + Math.random() * 40,
-      active: true,
     });
   }
 
-  // ============================================================
-  // 6. ВЫСТРЕЛ ВРАГА
-  // ============================================================
   function enemyShoot(enemy) {
     const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
     const speed = 3 + difficulty * 0.5;
-    const dx = Math.cos(angle) * speed;
-    const dy = Math.sin(angle) * speed;
     bullets.push({
       x: enemy.x,
       y: enemy.y,
-      dx: dx,
-      dy: dy,
+      dx: Math.cos(angle) * speed,
+      dy: Math.sin(angle) * speed,
       radius: 8,
       friendly: false,
     });
   }
 
-  // ============================================================
-  // 7. СПАВН МОНЕТ
-  // ============================================================
   function spawnCoin() {
     const x = 60 + Math.random() * (W - 120);
     const y = 40 + Math.random() * (H - 200);
-    coins.push({
-      x: x,
-      y: y,
-      radius: 14,
-      collected: false,
-    });
+    coins.push({ x, y, radius: 14, collected: false });
   }
 
-  // ============================================================
-  // 8. ОБНОВЛЕНИЕ ИГРЫ
-  // ============================================================
   function update() {
     if (state !== STATE.PLAYING) return;
 
     gameTime++;
     distance += 0.2;
-
-    // Сложность растёт
     difficulty = 1 + Math.floor(gameTime / 600) * 0.5;
     enemySpawnInterval = Math.max(40, 120 - difficulty * 8);
     maxEnemies = Math.min(8, 3 + Math.floor(difficulty / 2));
 
-    // Управление котом
-    if (touchLeft) player.targetSide = -1;
-    else if (touchRight) player.targetSide = 1;
-    else player.targetSide = 0;
-
-    // Плавное перемещение
-    if (player.targetSide !== 0) {
-      player.x += player.targetSide * player.speed * 1.5;
-    }
-    // Ограничение по краям (с учетом бревна)
+    // Управление
+    if (touchLeft) player.x -= 4;
+    if (touchRight) player.x += 4;
     const margin = 50;
     if (player.x < margin) player.x = margin;
     if (player.x > W - margin) player.x = W - margin;
@@ -268,93 +169,75 @@
       enemySpawnTimer = 0;
     }
 
-    // Обновление врагов
+    // Враги стреляют
     enemies.forEach(enemy => {
-      // Стрельба
       enemy.shootTimer++;
       if (enemy.shootTimer >= enemy.shootInterval) {
         enemyShoot(enemy);
         enemy.shootTimer = 0;
-        // увеличиваем интервал случайно
         enemy.shootInterval = 50 + Math.random() * 60;
       }
     });
 
-    // Обновление снарядов
+    // Движение снарядов
     bullets.forEach(b => {
       b.x += b.dx;
       b.y += b.dy;
     });
     bullets = bullets.filter(b => b.x > 0 && b.x < W && b.y > 0 && b.y < H);
 
-    // Столкновения снарядов с игроком
-    bullets.forEach(b => {
-      if (b.friendly) return;
+    // Попадания в игрока
+    for (let b of bullets) {
+      if (b.friendly) continue;
       const dx = b.x - player.x;
       const dy = b.y - player.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < player.radius + b.radius) {
-        // Попадание! Конец игры
+      if (Math.sqrt(dx*dx + dy*dy) < player.radius + b.radius) {
         state = STATE.GAMEOVER;
         return;
       }
-    });
+    }
 
     // Сбор монет
     coins.forEach(c => {
       if (c.collected) return;
       const dx = c.x - player.x;
       const dy = c.y - player.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < player.radius + c.radius) {
+      if (Math.sqrt(dx*dx + dy*dy) < player.radius + c.radius) {
         c.collected = true;
         coinCount++;
       }
     });
     coins = coins.filter(c => !c.collected);
 
-    // Спавн монет (каждые 90 кадров)
-    if (gameTime % 90 === 0) {
-      if (coins.length < 10) spawnCoin();
-    }
-
-    // Удаление врагов, если ушли за экран (не удаляем)
-    // Оставляем врагов, они активны всегда.
-
-    // Если игра окончена, выходим
-    if (state === STATE.GAMEOVER) {
-      // ничего не делаем
-    }
+    if (gameTime % 90 === 0 && coins.length < 10) spawnCoin();
   }
 
   // ============================================================
-  // 9. ОТРИСОВКА
+  // 4. ОТРИСОВКА
   // ============================================================
   function draw() {
     ctx.clearRect(0, 0, W, H);
 
     // Фон
-    const gradient = ctx.createLinearGradient(0, 0, 0, H);
-    gradient.addColorStop(0, '#1a0a2e');
-    gradient.addColorStop(1, '#0d1b2a');
-    ctx.fillStyle = gradient;
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#1a0a2e');
+    grad.addColorStop(1, '#0d1b2a');
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
-    // Бревно (вертикальное по центру)
-    const logWidth = 32;
-    const logX = W/2 - logWidth/2;
+    // Бревно
+    const logW = 32, logX = W/2 - logW/2;
     ctx.fillStyle = '#5c3a1e';
     ctx.shadowColor = '#000';
     ctx.shadowBlur = 15;
-    ctx.fillRect(logX, 0, logWidth, H);
+    ctx.fillRect(logX, 0, logW, H);
     ctx.shadowBlur = 0;
-    // текстура бревна
     ctx.strokeStyle = '#3d2614';
     ctx.lineWidth = 2;
     for (let y = 0; y < H; y += 30) {
       ctx.beginPath();
       ctx.moveTo(logX + 4, y);
-      ctx.lineTo(logX + logWidth - 4, y + 12);
+      ctx.lineTo(logX + logW - 4, y + 12);
       ctx.stroke();
     }
 
@@ -374,7 +257,7 @@
       ctx.fillText('₣', c.x, c.y+1);
     });
 
-    // Враги
+    // Враги (если картинка не загружена — круг)
     enemies.forEach(enemy => {
       const img = images[enemy.type];
       if (img) {
@@ -388,7 +271,7 @@
       }
     });
 
-    // Снаряды (базуки)
+    // Снаряды
     bullets.forEach(b => {
       ctx.beginPath();
       ctx.arc(b.x, b.y, b.radius, 0, Math.PI*2);
@@ -458,9 +341,6 @@
     }
   }
 
-  // ============================================================
-  // 10. ЦИКЛ ИГРЫ
-  // ============================================================
   function gameLoop() {
     update();
     draw();
@@ -468,7 +348,7 @@
   }
 
   // ============================================================
-  // 11. ОБРАБОТКА ВВОДА (мышь / тач)
+  // 5. УПРАВЛЕНИЕ
   // ============================================================
   function handleTap(e) {
     e.preventDefault();
@@ -481,7 +361,6 @@
     const y = (clientY - rect.top) * scaleY;
 
     if (state === STATE.MENU) {
-      // Проверяем попадание в кнопку "Начать"
       if (x > W/2 - 100 && x < W/2 + 100 && y > H/2 + 20 && y < H/2 + 80) {
         state = STATE.PLAYING;
         resetGame();
@@ -490,7 +369,6 @@
     }
 
     if (state === STATE.GAMEOVER) {
-      // Проверяем попадание в "Начать заново"
       if (x > W/2 - 120 && x < W/2 + 120 && y > H/2 + 70 && y < H/2 + 130) {
         state = STATE.PLAYING;
         resetGame();
@@ -498,16 +376,9 @@
       return;
     }
 
-    // Управление во время игры
     if (state === STATE.PLAYING) {
-      // Левая половина экрана -> влево, правая -> вправо
-      if (x < W/2) {
-        touchLeft = true;
-        touchRight = false;
-      } else {
-        touchRight = true;
-        touchLeft = false;
-      }
+      if (x < W/2) { touchLeft = true; touchRight = false; }
+      else { touchRight = true; touchLeft = false; }
     }
   }
 
@@ -525,7 +396,7 @@
   canvas.addEventListener('touchcancel', handleRelease, {passive: false});
 
   // ============================================================
-  // 12. ЗАПУСК
+  // 6. ЗАПУСК
   // ============================================================
   async function init() {
     await loadAllImages();
@@ -533,7 +404,6 @@
     state = STATE.MENU;
     gameLoop();
   }
-
   init();
 </script>
 </body>
