@@ -1045,6 +1045,25 @@ const bossHats = [
   { id: 21, image: "https://iili.io/nHir2dg.jpg", name: "Фантомы" }
 ];
 // ===========================================
-//   АРТЕФАКТЫ (пока пусто)
+//   АРТЕФАКТЫ (база)
 // ===========================================
+const artifacts = [
+  { id: 1, image: "https://iili.io/nHL0QGp.jpg", name: "Артефакт #1" },
+  { id: 2, image: "https://iili.io/nHL0Z6N.jpg", name: "Артефакт #2" },
+  { id: 3, image: "https://iili.io/nHL0m8X.jpg", name: "Артефакт #3" },
+  { id: 4, image: "https://iili.io/nHL0LnR.jpg", name: "Артефакт #4" },
+  { id: 5, image: "https://iili.io/nHL1HwG.jpg", name: "Артефакт #5" },
+  { id: 6, image: "https://iili.io/nHL1Jtf.jpg", name: "Артефакт #6" },
+  { id: 7, image: "https://iili.io/nHL13Ml.jpg", name: "Артефакт #7" },
+  { id: 8, image: "https://iili.io/nHL1FP2.jpg", name: "Артефакт #8" },
+  { id: 9, image: "https://iili.io/nHL1n9e.jpg", name: "Артефакт #9" },
+  { id: 10, image: "https://iili.io/nHL1oAu.jpg", name: "Артефакт #10" },
+  { id: 11, image: "https://iili.io/nHL1xwb.jpg", name: "Артефакт #11" },
+  { id: 12, image: "https://iili.io/nHL1ztj.jpg", name: "Артефакт #12" },
+  { id: 13, image: "https://iili.io/nHL1APV.jpg", name: "Артефакт #13" },
+  { id: 14, image: "https://iili.io/nHL17cP.jpg", name: "Артефакт #14" },
+  { id: 15, image: "https://iili.io/nHL1cHF.jpg", name: "Артефакт #15" },
+  { id: 16, image: "https://iili.io/nHL11DJ.jpg", name: "Артефакт #16" },
+  { id: 17, image: "https://iili.io/nHL1hlI.jpg", name: "Артефакт #17" }
+];
 const artifacts = [];
