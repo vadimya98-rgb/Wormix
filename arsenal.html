@@ -66,6 +66,20 @@
         ">Рассчитать</button>
       </div>
       <div id="calculator-results" class="card-grid"></div>
+
+      <!-- ПРИМЕЧАНИЕ ВНИЗУ -->
+      <div style="
+        margin-top: 24px;
+        padding: 16px;
+        background: rgba(251, 191, 36, 0.08);
+        border-left: 4px solid #fcd34d;
+        border-radius: 8px;
+        color: #fcd34d;
+        font-size: 0.9rem;
+        text-align: center;
+      ">
+        ⚠️ Все параметры приблизительные. В реальном бою данные по урону могут отличаться из-за случайных факторов (критические удары, сопротивления, баффы и дебаффы).
+      </div>
     </div>
 
   </div>
@@ -81,7 +95,6 @@
         this.classList.add('active');
         const tabId = this.dataset.tab + '-tab';
         document.getElementById(tabId).classList.add('active');
-        // Если переключились на калькулятор — пересчитать
         if (tabId === 'calculator-tab') {
           calculateDamage();
         }
@@ -97,10 +110,8 @@
       if (!container) return;
       container.innerHTML = '';
 
-      // Собираем всё оружие, у которого есть числовой урон
       const allWeapons = [];
       
-      // Бесконечное
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
           const baseDamage = parseDamageValue(w.damage);
@@ -110,7 +121,6 @@
         });
       }
 
-      // Апгрейды
       if (typeof upgradeWeapons !== 'undefined') {
         upgradeWeapons.forEach(w => {
           const baseDamage = parseDamageValue(w.damage);
@@ -120,15 +130,12 @@
         });
       }
 
-      // Сортируем по урону (от большего к меньшему)
       allWeapons.sort((a, b) => b.baseDamage - a.baseDamage);
 
-      // Рассчитываем реальный урон
       allWeapons.forEach(w => {
         const realDamage = (w.baseDamage * attack) / (attack + armor);
         const card = document.createElement('div');
         card.className = 'card';
-        // Цвет урона от зелёного к красному
         const maxDmg = allWeapons.length > 0 ? allWeapons[0].baseDamage : 100;
         const ratio = Math.min(1, w.baseDamage / maxDmg);
         const red = Math.round(50 + 205 * ratio);
@@ -153,15 +160,12 @@
       }
     }
 
-    // Парсит урон из строки "60 ед." или "16 пуль по 5 ед." → возвращает число
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return 0;
-      // Ищем первое число в строке
       const match = damageStr.match(/(\d+)/);
       if (match) {
         return parseInt(match[1]);
       }
-      // Если есть "5×20" — берём произведение
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         return parseInt(multMatch[1]) * parseInt(multMatch[2]);
@@ -169,18 +173,14 @@
       return 0;
     }
 
-    // Запуск калькулятора при загрузке (если вкладка активна)
     document.addEventListener('DOMContentLoaded', function() {
-      // Если вкладка калькулятора активна по умолчанию
       if (document.getElementById('calculator-tab').classList.contains('active')) {
         calculateDamage();
       }
-      // Навешиваем событие на кнопку
       const btn = document.getElementById('calc-btn');
       if (btn) {
         btn.addEventListener('click', calculateDamage);
       }
-      // Автоматический пересчёт при изменении полей
       ['attack-input', 'armor-input'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
