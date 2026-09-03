@@ -100,6 +100,7 @@ h1 {
   transition: 0.3s;
 }
 
+/* ===== ПЕРСОНАЖИ ===== */
 .menu-btn[data-char="dragon"]::before {
   background: url('https://iili.io/nHuMPn9.jpg') no-repeat center center/cover;
 }
