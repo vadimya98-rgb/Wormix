@@ -1032,6 +1032,7 @@ const hats = [
 { id: 72, image: "https://iili.io/nHtwECP.jpg", name: "шлем чемпиона" },
 { id: 73, image: "https://iili.io/nHtw0ZB.jpg", name: "самурайский шлем" },
 { id: 74, image: "https://iili.io/nHtwGG1.jpg", name: "шлем изверга" }
+];
 
 // ===========================================
 //   ШАПКИ ЗА БОССОВ (21 вид)
