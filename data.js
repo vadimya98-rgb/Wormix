@@ -1018,7 +1018,32 @@ const hats = [
   { id: 60, image: "https://iili.io/nH4SvPs.jpg", name: "Шапка #60" },
   { id: 61, image: "https://iili.io/nH4SQVe.jpg", name: "Шапка #61" }
 ];
-
+// ===========================================
+//   ШАПКИ ЗА БОССОВ
+// ===========================================
+const bossHats = [
+  { id: 1, image: "https://iili.io/nHignUu.jpg", name: "Шаман вуду" },
+  { id: 2, image: "https://iili.io/nHigCle.jpg", name: "Иллюзионист" },
+  { id: 3, image: "https://iili.io/nHig2Dl.jpg", name: "Викинги" },
+  { id: 4, image: "https://iili.io/nHigKVS.jpg", name: "Пираты" },
+  { id: 5, image: "https://iili.io/nHigzRj.jpg", name: "Мастер ветра" },
+  { id: 6, image: "https://iili.io/nHigTDQ.jpg", name: "Якудза" },
+  { id: 7, image: "https://iili.io/nHigRWB.jpg", name: "Оживший капитан" },
+  { id: 8, image: "https://iili.io/nHigYf1.jpg", name: "Ромео и Джульетта" },
+  { id: 9, image: "https://iili.io/nHigcUg.jpg", name: "Король мертвых" },
+  { id: 10, image: "https://iili.io/nHigEOv.jpg", name: "Древний призрак" },
+  { id: 11, image: "https://iili.io/nHigGbR.jpg", name: "Инженер" },
+  { id: 12, image: "https://iili.io/nHigWWN.jpg", name: "Стражи недр" },
+  { id: 13, image: "https://iili.io/nHigw0X.jpg", name: "Темный рыцарь" },
+  { id: 14, image: "https://iili.io/nHigeJs.jpg", name: "Ассасин" },
+  { id: 15, image: "https://iili.io/nHigk5G.jpg", name: "Алхимик" },
+  { id: 16, image: "https://iili.io/nHigP19.jpg", name: "Император" },
+  { id: 17, image: "https://iili.io/nHigmXV.jpg", name: "Хакер" },
+  { id: 18, image: "https://iili.io/nHirH11.jpg", name: "Ворюги" },
+  { id: 19, image: "https://iili.io/nHigZej.jpg", name: "Палладин" },
+  { id: 20, image: "https://iili.io/nHirJrF.jpg", name: "Телепат" },
+  { id: 21, image: "https://iili.io/nHir2dg.jpg", name: "Фантомы" }
+];
 // ===========================================
 //   АРТЕФАКТЫ (пока пусто)
 // ===========================================
