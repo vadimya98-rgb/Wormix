@@ -1221,14 +1221,14 @@ const hatCraftRecipes = [
     cost: "1000 фузов / 10 рубинов"
   },
   {
-    id: 12,
-    ingredients: [
-      { type: 'hat', name: 'самурайский шлем' },
-      { type: 'emblem', count: 2 }
-    ],
-    result: { name: 'самурайский шлем' },
-    cost: "—"
-  },
+  id: 12,
+  ingredients: [
+    { type: 'hat', name: 'самурайский шлем' },
+    { type: 'emblem', count: 2 }
+  ],
+  result: { name: 'самурайский шлем' },
+  cost: "800 фузов / 8 рубинов"
+},
   {
     id: 13,
     ingredients: [
