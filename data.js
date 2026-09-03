@@ -1052,7 +1052,7 @@ const bossHats = [
   { id: 12, image: "https://iili.io/nHigWWN.jpg", name: "Стражи недр" },
   { id: 13, image: "https://iili.io/nHigw0X.jpg", name: "Темный рыцарь" },
   { id: 14, image: "https://iili.io/nHigeJs.jpg", name: "Ассасин" },
-  { id: 15, image: "https://iili.io/nHigk5G.jpg", name: "Алхимик" },
+  { id: 15, image: "https://iili.io/nHigk5G.jpg", name: "шапка Алхимика" },
   { id: 16, image: "https://iili.io/nHigP19.jpg", name: "Император" },
   { id: 17, image: "https://iili.io/nHigmXV.jpg", name: "Хакер" },
   { id: 18, image: "https://iili.io/nHirH11.jpg", name: "Ворюги" },
@@ -1182,7 +1182,7 @@ const hatCraftRecipes = [
     ingredients: [
       { type: 'hat', name: 'черный ворон' },
       { type: 'hat', name: 'крик' },
-      { type: 'hat', name: 'Алхимик' },
+      { type: 'hat', name: 'шапка Алхимика' },
       { type: 'emblem', count: 6 }
     ],
     result: { name: 'ворон' },
