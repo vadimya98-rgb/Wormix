@@ -1406,7 +1406,7 @@ const bossHats = [
     {
         id: 15,
         image: "https://i.ibb.co/2bzN3F1/Screenshot-20260903-130541-Wormix.jpg",
-        name: "шапка Алхимика"
+        name: "Алхимик"
     },
     {
         id: 16,
@@ -1645,7 +1645,7 @@ const hatCraftRecipes = [
     ingredients: [
       { type: 'hat', name: 'черный ворон' },
       { type: 'hat', name: 'крик' },
-      { type: 'bossHat', name: 'шапка Алхимика' },
+      { type: 'bossHat', name: 'Алхимик' },
       { type: 'emblem', count: 6 }
     ],
     result: { name: 'ворон' },
