@@ -100,13 +100,13 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (с компонентами) ==========
+    // ========== ПАРСИНГ УРОНА (универсальный) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
 
       const display = damageStr;
 
-      // 1. Диапазон "от X до Y"
+      // 1. Диапазон "от X до Y" или "X–Y"
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) ||
                          damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
@@ -115,8 +115,8 @@
         return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // 2. Взрыв + осколки (например: "40 ед. взрыв + 6 осколков по 35 ед.")
-      const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*осколк(?:а|ов)?\s*по\s*(\d+)/i);
+      // 2. Взрыв + осколки/куски/части (например: "40 ед. взрыв + 6 осколков по 35 ед.")
+      const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*(?:осколк(?:а|ов)?|куск(?:а|ов)?|част(?:и|ей)?)\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]);
         const count = parseInt(explosionMatch[2]);
@@ -125,17 +125,27 @@
         return { type: 'explosion', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
       }
 
-      // 3. Урон + умножение (например: "45 ед. + 3×30 ед.")
+      // 3. Взрыв + умножение (например: "45 ед. взрыв + 9×15 ед.")
+      const explosionMultMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
+      if (explosionMultMatch) {
+        const direct = parseInt(explosionMultMatch[1]);
+        const count = parseInt(explosionMultMatch[2]);
+        const per = parseInt(explosionMultMatch[3]);
+        const base = direct + count * per;
+        return { type: 'explosion', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
+      }
+
+      // 4. Прямой урон + умножение (без слова взрыв) (например: "45 ед. + 3×30 ед.")
       const sumMultMatch = damageStr.match(/(\d+)\s*ед?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (sumMultMatch) {
         const direct = parseInt(sumMultMatch[1]);
         const count = parseInt(sumMultMatch[2]);
         const per = parseInt(sumMultMatch[3]);
         const base = direct + count * per;
-        return { type: 'summult', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
+        return { type: 'explosion', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
       }
 
-      // 4. Простое умножение X×Y (например: "65×3")
+      // 5. Простое умножение X×Y (например: "65×3")
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const count = parseInt(multMatch[1]);
@@ -144,7 +154,7 @@
         return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 5. Множественные попадания: "X пуль/осколков/дробинок/ракет по Y"
+      // 6. Множественные попадания: "X пуль/осколков/дробинок/ракет по Y" (без взрыва)
       const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const count = parseInt(hitsMatch[1]);
@@ -153,7 +163,7 @@
         return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 6. Простое число
+      // 7. Простое число
       const firstNum = damageStr.match(/(\d+)/);
       if (firstNum) {
         const base = parseInt(firstNum[1]);
@@ -224,7 +234,7 @@
               (при атаке ${attack} / броне ${armor})
             </div>
           `;
-        } else if (w.parsed.type === 'explosion' || w.parsed.type === 'summult') {
+        } else if (w.parsed.type === 'explosion') {
           // Взрыв + осколки (или прямой + множитель)
           const directReal = Math.round(w.parsed.direct * coeff);
           const perReal = Math.round(w.parsed.per * coeff);
@@ -245,7 +255,6 @@
         } else {
           // Простой или умножение
           const totalReal = Math.round(w.parsed.base * coeff);
-          // Для простого умножения показываем просто число, без скобок
           card.innerHTML = `
             <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
             <h3>${w.name}</h3>
