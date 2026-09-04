@@ -63,17 +63,17 @@ const infiniteWeapons = [
         comment: "Короткие очереди, почти без разброса. Можно менять угол стрельбы."
     },
     {
-        id: 6,
-        name: "Сюрикены",
-        image: "https://i.ibb.co/q62krJp/Screenshot-20260902-195456-Wormix.jpg",
-        type: "Бесконечное",
-        level: "-",
-        damage: "17 ед. за бросок (первое попадание двойное)",
-        maxUpgrade: "-",
-        price: "-",
-        upgradeCost: "-",
-        comment: "4 сюрикена за ход. Двойной урон при первом попадании по цели."
-    },
+    id: 6,
+    name: "Сюрикены",
+    image: "https://i.ibb.co/q62krJp/Screenshot-20260902-195456-Wormix.jpg",
+    type: "Бесконечное",
+    level: "-",
+    damage: "4×17",
+    maxUpgrade: "-",
+    price: "-",
+    upgradeCost: "-",
+    comment: "4 сюрикена за ход. Двойной урон при первом попадании по цели."
+},
     {
         id: 7,
         name: "Липучая граната",
