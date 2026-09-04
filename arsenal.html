@@ -115,9 +115,11 @@
       });
     });
 
-    // ========== НОВАЯ ФУНКЦИЯ ПАРСИНГА УРОНА (с учётом множителей и диапазонов) ==========
+    // ========== ПАРСИНГ УРОНА (с сохранением исходной строки) ==========
     function parseDamageValue(damageStr) {
-      if (!damageStr || damageStr === '—') return { base: 0 };
+      if (!damageStr || damageStr === '—') return { base: 0, display: damageStr || '—' };
+
+      const display = damageStr; // сохраняем исходную строку
 
       // 1. Обработка диапазона "от X до Y" или "X–Y" или "X - Y"
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || 
@@ -125,41 +127,41 @@
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]);
         const max = parseInt(rangeMatch[2]);
-        return { min: min, max: max };
+        return { min, max, display };
       }
 
       // 2. Обработка умножения "X×Y" или "X*Y" или "X x Y"
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const base = parseInt(multMatch[1]) * parseInt(multMatch[2]);
-        return { base: base };
+        return { base, display };
       }
 
       // 3. Обработка фразы "X ударов по Y" или "X раза по Y"
       const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
-        return { base: base };
+        return { base, display };
       }
 
       // 4. Обработка "по X ед." – берём X
       const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
       if (byMatch) {
-        return { base: parseInt(byMatch[1]) };
+        return { base: parseInt(byMatch[1]), display };
       }
 
       // 5. Если есть "взрыв" или "удар" – берём первое число
       if (/взрыв|удар/i.test(damageStr)) {
         const firstNum = damageStr.match(/(\d+)/);
-        if (firstNum) return { base: parseInt(firstNum[1]) };
+        if (firstNum) return { base: parseInt(firstNum[1]), display };
       }
 
       // 6. Иначе – берём первое число
       const firstNum = damageStr.match(/(\d+)/);
-      return { base: firstNum ? parseInt(firstNum[1]) : 0 };
+      return { base: firstNum ? parseInt(firstNum[1]) : 0, display };
     }
 
-    // ========== НОВАЯ ФУНКЦИЯ КАЛЬКУЛЯТОРА (поддерживает диапазоны и множители) ==========
+    // ========== КАЛЬКУЛЯТОР (Кувалда исключена, отображение с исходной строкой) ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 100;
@@ -172,6 +174,8 @@
 
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
+          // Исключаем Кувалду (id: 32)
+          if (w.id === 32) return;
           const parsed = parseDamageValue(w.damage);
           if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
             allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
@@ -212,7 +216,7 @@
           // Диапазон урона
           const minReal = (w.parsed.min * attack) / (attack + armor);
           const maxReal = (w.parsed.max * attack) / (attack + armor);
-          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.min}–${w.parsed.max}`;
+          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.display}`;
           realDamageDisplay = `💥 Реальный урон: ${Math.round(minReal)}–${Math.round(maxReal)}`;
           damageHTML = `
             <div class="info">${baseDamageDisplay}</div>
@@ -221,10 +225,10 @@
             </div>
           `;
         } else {
-          // Обычный урон
+          // Обычный урон (уже с учётом умножения в base)
           const base = w.parsed.base;
           const realDamage = (base * attack) / (attack + armor);
-          baseDamageDisplay = `⚔️ Базовый урон: ${base}`;
+          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.display}`;
           realDamageDisplay = `💥 Реальный урон: ${Math.round(realDamage)}`;
           // Цвет от зелёного к красному
           const maxDmg = allWeapons.reduce((max, item) => {
