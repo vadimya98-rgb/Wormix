@@ -15,7 +15,6 @@
     <h1>🔫 Арсенал</h1>
     <p class="subtitle">Всё оружие в Wormix Mobile</p>
 
-    <!-- КНОПКИ-ВКЛАДКИ -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="infinite">♾️ Бесконечное</button>
       <button class="tab-btn" data-tab="consumable">💥 Штучное</button>
@@ -23,7 +22,6 @@
       <button class="tab-btn" data-tab="calculator">📊 Калькулятор</button>
     </div>
 
-    <!-- СОДЕРЖИМОЕ ВКЛАДОК -->
     <div id="infinite-tab" class="tab-content active">
       <div id="infinite-weapon-list" class="card-grid"></div>
     </div>
@@ -33,60 +31,33 @@
     </div>
 
     <div id="upgrade-tab" class="tab-content">
-      <p style="color: #fcd34d; text-align: center; font-weight: 600; margin-bottom: 12px;">
-        🔥 Самый нужный арсенал для битв
-      </p>
+      <p style="color: #fcd34d; text-align: center; font-weight: 600; margin-bottom: 12px;">🔥 Самый нужный арсенал для битв</p>
       <div id="upgrade-weapon-list" class="card-grid"></div>
     </div>
 
     <div id="calculator-tab" class="tab-content">
-      <p style="color: #94a3b8; text-align: center; margin-bottom: 16px;">
-        Введите свои параметры, чтобы увидеть реальный урон по каждому оружию
-      </p>
+      <p style="color: #94a3b8; text-align: center; margin-bottom: 16px;">Введите свои параметры, чтобы увидеть реальный урон по каждому оружию</p>
       <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
         <div style="flex: 1; min-width: 120px;">
           <label style="color: #94a3b8; font-size: 0.9rem;">⚔️ Атака</label>
-          <input type="number" id="attack-input" value="100" min="1" max="999" style="
-            width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05); color: #fff; font-size: 1.1rem;
-          ">
+          <input type="number" id="attack-input" value="100" min="1" max="999" style="width:100%; padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem;">
         </div>
         <div style="flex: 1; min-width: 120px;">
           <label style="color: #94a3b8; font-size: 0.9rem;">🛡️ Броня</label>
-          <input type="number" id="armor-input" value="50" min="0" max="999" style="
-            width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05); color: #fff; font-size: 1.1rem;
-          ">
+          <input type="number" id="armor-input" value="50" min="0" max="999" style="width:100%; padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#fff; font-size:1.1rem;">
         </div>
-        <button id="calc-btn" style="
-          padding: 10px 24px; border-radius: 40px; border: none;
-          background: linear-gradient(135deg, #4f46e5, #818cf8);
-          color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer;
-          transition: 0.3s; align-self: flex-end;
-        ">Рассчитать</button>
+        <button id="calc-btn" style="padding:10px 24px; border-radius:40px; border:none; background:linear-gradient(135deg,#4f46e5,#818cf8); color:#fff; font-weight:700; font-size:1rem; cursor:pointer; transition:0.3s; align-self:flex-end;">Рассчитать</button>
       </div>
       <div id="calculator-results" class="card-grid"></div>
-
-      <div style="
-        margin-top: 24px;
-        padding: 16px;
-        background: rgba(251, 191, 36, 0.08);
-        border-left: 4px solid #fcd34d;
-        border-radius: 8px;
-        color: #fcd34d;
-        font-size: 0.9rem;
-        text-align: center;
-      ">
+      <div style="margin-top:24px; padding:16px; background:rgba(251,191,36,0.08); border-left:4px solid #fcd34d; border-radius:8px; color:#fcd34d; font-size:0.9rem; text-align:center;">
         ⚠️ Все параметры приблизительные. В реальном бою данные по урону могут отличаться из-за случайных факторов (критические удары, сопротивления, баффы и дебаффы).
       </div>
     </div>
-
   </div>
 
   <script src="data.js"></script>
   <script src="render.js"></script>
   <script>
-    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -94,97 +65,78 @@
         this.classList.add('active');
         const tabId = this.dataset.tab + '-tab';
         document.getElementById(tabId).classList.add('active');
-        if (tabId === 'calculator-tab') {
-          calculateDamage();
-        }
+        if (tabId === 'calculator-tab') calculateDamage();
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (универсальный) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
-
       const display = damageStr;
 
-      // 1. Диапазон "от X до Y" или "X–Y"
-      const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) ||
-                         damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
+      // Диапазон
+      const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
-        const min = parseInt(rangeMatch[1]);
-        const max = parseInt(rangeMatch[2]);
+        const min = parseInt(rangeMatch[1]), max = parseInt(rangeMatch[2]);
         return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // 2. Взрыв + осколки/куски/части (например: "40 ед. взрыв + 6 осколков по 35 ед.")
+      // Взрыв + осколки/куски (например: "40 ед. взрыв + 6 осколков по 35")
       const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*(?:осколк(?:а|ов)?|куск(?:а|ов)?|част(?:и|ей)?)\s*по\s*(\d+)/i);
       if (explosionMatch) {
-        const direct = parseInt(explosionMatch[1]);
-        const count = parseInt(explosionMatch[2]);
-        const per = parseInt(explosionMatch[3]);
+        const direct = parseInt(explosionMatch[1]), count = parseInt(explosionMatch[2]), per = parseInt(explosionMatch[3]);
         const base = direct + count * per;
         const formula = `${direct} ед. от взрыва + ${count}×${per} осколки`;
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 3. Взрыв + умножение (например: "45 ед. взрыв + 9×15 ед.")
+      // Взрыв + умножение (например: "45 ед. взрыв + 9×15 ед.")
       const explosionMultMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (explosionMultMatch) {
-        const direct = parseInt(explosionMultMatch[1]);
-        const count = parseInt(explosionMultMatch[2]);
-        const per = parseInt(explosionMultMatch[3]);
+        const direct = parseInt(explosionMultMatch[1]), count = parseInt(explosionMultMatch[2]), per = parseInt(explosionMultMatch[3]);
         const base = direct + count * per;
         const formula = `${direct} ед. от взрыва + ${count}×${per} осколки`;
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 4. Прямой урон + умножение (без слова взрыв) (например: "45 ед. + 3×30 ед.")
+      // Прямой + умножение (без слова взрыв)
       const sumMultMatch = damageStr.match(/(\d+)\s*ед?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (sumMultMatch) {
-        const direct = parseInt(sumMultMatch[1]);
-        const count = parseInt(sumMultMatch[2]);
-        const per = parseInt(sumMultMatch[3]);
+        const direct = parseInt(sumMultMatch[1]), count = parseInt(sumMultMatch[2]), per = parseInt(sumMultMatch[3]);
         const base = direct + count * per;
         const formula = `${direct} ед. + ${count}×${per}`;
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 5. Простое умножение X×Y (например: "65×3")
+      // Умножение X×Y
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
-        const count = parseInt(multMatch[1]);
-        const per = parseInt(multMatch[2]);
+        const count = parseInt(multMatch[1]), per = parseInt(multMatch[2]);
         const base = count * per;
-        const formula = `${count}×${per}`;
-        return { type: 'mult', count, per, base, display, formula };
+        return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 6. Множественные попадания: "X пуль/осколков/дробинок/ракет по Y" (без взрыва)
+      // Множественные попадания (пули, осколки, ракеты и т.п.)
       const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза)\s*по\s*(\d+)/i);
       if (hitsMatch) {
-        const count = parseInt(hitsMatch[1]);
-        const per = parseInt(hitsMatch[2]);
+        const count = parseInt(hitsMatch[1]), per = parseInt(hitsMatch[2]);
         const base = count * per;
-        const formula = `${count}×${per}`;
-        return { type: 'mult', count, per, base, display, formula };
+        return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 7. Простое число
+      // Простое число
       const firstNum = damageStr.match(/(\d+)/);
       if (firstNum) {
         const base = parseInt(firstNum[1]);
-        const formula = `${base}`;
-        return { type: 'simple', base, display, formula };
+        return { type: 'simple', base, display, formula: `${base}` };
       }
 
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
-    // ========== КАЛЬКУЛЯТОР ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 100;
       const armor = parseInt(document.getElementById('armor-input').value) || 50;
-
       if (!container) return;
       container.innerHTML = '';
 
@@ -195,9 +147,7 @@
         infiniteWeapons.forEach(w => {
           if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
-          if (parsed.type !== 'none' && parsed.base > 0) {
-            allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
-          }
+          if (parsed.type !== 'none' && parsed.base > 0) allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
         });
       }
 
@@ -205,9 +155,7 @@
         upgradeWeapons.forEach(w => {
           if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
-          if (parsed.type !== 'none' && parsed.base > 0) {
-            allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
-          }
+          if (parsed.type !== 'none' && parsed.base > 0) allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
         });
       }
 
@@ -217,11 +165,11 @@
       }
 
       allWeapons.sort((a, b) => b.parsed.base - a.parsed.base);
+      const coeff = attack / (attack + armor);
 
       allWeapons.forEach(w => {
         const card = document.createElement('div');
         card.className = 'card';
-        const coeff = attack / (attack + armor);
 
         if (w.parsed.type === 'range') {
           const minReal = Math.round(w.parsed.min * coeff);
@@ -231,31 +179,22 @@
             <h3>${w.name}</h3>
             <div class="info">${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
-            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
-              💥 Реальный урон: ${minReal}–${maxReal}
-            </div>
-            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
-              (при атаке ${attack} / броне ${armor})
-            </div>
+            <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${minReal}–${maxReal}</div>
+            <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
           `;
         } else if (w.parsed.type === 'explosion') {
           const directReal = Math.round(w.parsed.direct * coeff);
           const perReal = Math.round(w.parsed.per * coeff);
           const count = w.parsed.count;
           const totalReal = Math.round(w.parsed.base * coeff);
-          // Формируем текст реального урона с разбивкой
-          const detailText = `${directReal} ед. от взрыва + ${count}×${perReal} осколки`;
+          const detail = `${directReal} ед. от взрыва + ${count}×${perReal} осколки`;
           card.innerHTML = `
             <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
             <h3>${w.name}</h3>
             <div class="info">${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
-            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
-              💥 Реальный урон: ${totalReal} (${detailText})
-            </div>
-            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
-              (при атаке ${attack} / броне ${armor})
-            </div>
+            <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal} (${detail})</div>
+            <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
           `;
         } else {
           const totalReal = Math.round(w.parsed.base * coeff);
@@ -264,32 +203,19 @@
             <h3>${w.name}</h3>
             <div class="info">${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
-            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
-              💥 Реальный урон: ${totalReal}
-            </div>
-            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
-              (при атаке ${attack} / броне ${armor})
-            </div>
+            <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal}</div>
+            <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
           `;
         }
         container.appendChild(card);
       });
     }
 
-    // ========== ЗАПУСК ==========
     document.addEventListener('DOMContentLoaded', function() {
-      if (document.getElementById('calculator-tab').classList.contains('active')) {
-        calculateDamage();
-      }
-      const btn = document.getElementById('calc-btn');
-      if (btn) {
-        btn.addEventListener('click', calculateDamage);
-      }
+      if (document.getElementById('calculator-tab').classList.contains('active')) calculateDamage();
+      document.getElementById('calc-btn').addEventListener('click', calculateDamage);
       ['attack-input', 'armor-input'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.addEventListener('input', calculateDamage);
-        }
+        document.getElementById(id).addEventListener('input', calculateDamage);
       });
     });
   </script>
