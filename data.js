@@ -99,17 +99,17 @@ const infiniteWeapons = [
         comment: "Мощное оружие ближнего боя, большой разброс."
     },
     {
-        id: 9,
-        name: "Ружьё",
-        image: "https://i.ibb.co/Gfgkz9Ls/Screenshot-20260902-195511-Wormix.jpg",
-        type: "Бесконечное",
-        level: "-",
-        damage: "30 ед. за выстрел, 2 выстрела",
-        maxUpgrade: "-",
-        price: "-",
-        upgradeCost: "-",
-        comment: "Между выстрелами можно перемещаться."
-    },
+    id: 9,
+    name: "Ружьё",
+    image: "https://i.ibb.co/Gfgkz9Ls/Screenshot-20260902-195511-Wormix.jpg",
+    type: "Бесконечное",
+    level: "-",
+    damage: "2×30",
+    maxUpgrade: "-",
+    price: "-",
+    upgradeCost: "-",
+    comment: "Между выстрелами можно перемещаться."
+},
     {
         id: 10,
         name: "Пулемёт",
