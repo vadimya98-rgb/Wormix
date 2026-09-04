@@ -115,50 +115,75 @@
       });
     });
 
+    // ========== НОВАЯ ФУНКЦИЯ ПАРСИНГА УРОНА (с учётом множителей и диапазонов) ==========
     function parseDamageValue(damageStr) {
-      if (!damageStr || damageStr === '—') return 0;
+      if (!damageStr || damageStr === '—') return { base: 0 };
 
-      const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
-      if (byMatch) return parseInt(byMatch[1]);
-
-      if (/взрыв|удар/i.test(damageStr)) {
-        const firstNum = damageStr.match(/(\d+)/);
-        if (firstNum) return parseInt(firstNum[1]);
+      // 1. Обработка диапазона "от X до Y" или "X–Y" или "X - Y"
+      const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || 
+                         damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
+      if (rangeMatch) {
+        const min = parseInt(rangeMatch[1]);
+        const max = parseInt(rangeMatch[2]);
+        return { min: min, max: max };
       }
 
+      // 2. Обработка умножения "X×Y" или "X*Y" или "X x Y"
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
-        return parseInt(multMatch[1]) * parseInt(multMatch[2]);
+        const base = parseInt(multMatch[1]) * parseInt(multMatch[2]);
+        return { base: base };
       }
 
+      // 3. Обработка фразы "X ударов по Y" или "X раза по Y"
+      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза)\s*по\s*(\d+)/i);
+      if (hitsMatch) {
+        const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
+        return { base: base };
+      }
+
+      // 4. Обработка "по X ед." – берём X
+      const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
+      if (byMatch) {
+        return { base: parseInt(byMatch[1]) };
+      }
+
+      // 5. Если есть "взрыв" или "удар" – берём первое число
+      if (/взрыв|удар/i.test(damageStr)) {
+        const firstNum = damageStr.match(/(\d+)/);
+        if (firstNum) return { base: parseInt(firstNum[1]) };
+      }
+
+      // 6. Иначе – берём первое число
       const firstNum = damageStr.match(/(\d+)/);
-      return firstNum ? parseInt(firstNum[1]) : 0;
+      return { base: firstNum ? parseInt(firstNum[1]) : 0 };
     }
 
+    // ========== НОВАЯ ФУНКЦИЯ КАЛЬКУЛЯТОРА (поддерживает диапазоны и множители) ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 100;
       const armor = parseInt(document.getElementById('armor-input').value) || 50;
-      
+
       if (!container) return;
       container.innerHTML = '';
 
       const allWeapons = [];
-      
+
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
-          const baseDamage = parseDamageValue(w.damage);
-          if (baseDamage > 0) {
-            allWeapons.push({ ...w, baseDamage, type: 'Бесконечное' });
+          const parsed = parseDamageValue(w.damage);
+          if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
+            allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
           }
         });
       }
 
       if (typeof upgradeWeapons !== 'undefined') {
         upgradeWeapons.forEach(w => {
-          const baseDamage = parseDamageValue(w.damage);
-          if (baseDamage > 0) {
-            allWeapons.push({ ...w, baseDamage, type: 'Апгрейд' });
+          const parsed = parseDamageValue(w.damage);
+          if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
+            allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
           }
         });
       }
@@ -168,24 +193,60 @@
         return;
       }
 
-      allWeapons.sort((a, b) => b.baseDamage - a.baseDamage);
+      // Сортировка: для диапазонов используем среднее значение
+      allWeapons.sort((a, b) => {
+        const aVal = a.parsed.min !== undefined ? (a.parsed.min + a.parsed.max) / 2 : a.parsed.base;
+        const bVal = b.parsed.min !== undefined ? (b.parsed.min + b.parsed.max) / 2 : b.parsed.base;
+        return bVal - aVal;
+      });
 
       allWeapons.forEach(w => {
-        const realDamage = (w.baseDamage * attack) / (attack + armor);
         const card = document.createElement('div');
         card.className = 'card';
-        const maxDmg = allWeapons[0].baseDamage;
-        const ratio = Math.min(1, w.baseDamage / maxDmg);
-        const red = Math.round(50 + 205 * ratio);
-        const green = Math.round(200 - 150 * ratio);
+
+        let damageHTML = '';
+        let baseDamageDisplay = '';
+        let realDamageDisplay = '';
+
+        if (w.parsed.min !== undefined && w.parsed.max !== undefined) {
+          // Диапазон урона
+          const minReal = (w.parsed.min * attack) / (attack + armor);
+          const maxReal = (w.parsed.max * attack) / (attack + armor);
+          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.min}–${w.parsed.max}`;
+          realDamageDisplay = `💥 Реальный урон: ${Math.round(minReal)}–${Math.round(maxReal)}`;
+          damageHTML = `
+            <div class="info">${baseDamageDisplay}</div>
+            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
+              ${realDamageDisplay}
+            </div>
+          `;
+        } else {
+          // Обычный урон
+          const base = w.parsed.base;
+          const realDamage = (base * attack) / (attack + armor);
+          baseDamageDisplay = `⚔️ Базовый урон: ${base}`;
+          realDamageDisplay = `💥 Реальный урон: ${Math.round(realDamage)}`;
+          // Цвет от зелёного к красному
+          const maxDmg = allWeapons.reduce((max, item) => {
+            const val = item.parsed.min !== undefined ? (item.parsed.min + item.parsed.max) / 2 : item.parsed.base;
+            return Math.max(max, val);
+          }, 1);
+          const ratio = Math.min(1, base / maxDmg);
+          const red = Math.round(50 + 205 * ratio);
+          const green = Math.round(200 - 150 * ratio);
+          damageHTML = `
+            <div class="info">${baseDamageDisplay}</div>
+            <div class="info" style="color: rgb(${red}, ${green}, 50); font-weight: 700; font-size: 1.1rem;">
+              ${realDamageDisplay}
+            </div>
+          `;
+        }
+
         card.innerHTML = `
           <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
           <h3>${w.name}</h3>
           <div class="info">${w.type}</div>
-          <div class="info">⚔️ Базовый урон: ${w.baseDamage}</div>
-          <div class="info" style="color: rgb(${red}, ${green}, 50); font-weight: 700; font-size: 1.1rem;">
-            💥 Реальный урон: ${Math.round(realDamage)}
-          </div>
+          ${damageHTML}
           <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
             (при атаке ${attack} / броне ${armor})
           </div>
@@ -194,6 +255,7 @@
       });
     }
 
+    // ========== ЗАПУСК ==========
     document.addEventListener('DOMContentLoaded', function() {
       if (document.getElementById('calculator-tab').classList.contains('active')) {
         calculateDamage();
