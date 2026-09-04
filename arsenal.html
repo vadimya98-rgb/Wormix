@@ -67,7 +67,6 @@
       </div>
       <div id="calculator-results" class="card-grid"></div>
 
-      <!-- РАМОЧКА УБРАНА -->
       <div style="
         margin-top: 24px;
         padding: 16px;
@@ -101,63 +100,67 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (с сохранением пояснения) ==========
+    // ========== ПАРСИНГ УРОНА (с компонентами) ==========
     function parseDamageValue(damageStr) {
-      if (!damageStr || damageStr === '—') return { base: 0, display: damageStr || '—' };
+      if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
 
       const display = damageStr;
 
       // 1. Диапазон "от X до Y"
-      const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || 
+      const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) ||
                          damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]);
         const max = parseInt(rangeMatch[2]);
-        return { min, max, display, detail: 'диапазон' };
+        return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // 2. Взрыв + осколки
+      // 2. Взрыв + осколки (например: "40 ед. взрыв + 6 осколков по 35 ед.")
       const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*осколк(?:а|ов)?\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]);
         const count = parseInt(explosionMatch[2]);
-        const perShard = parseInt(explosionMatch[3]);
-        const base = direct + count * perShard;
-        return { base, display, detail: `${count} осколк${count>1?'а':'ов'}` };
+        const per = parseInt(explosionMatch[3]);
+        const base = direct + count * per;
+        return { type: 'explosion', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
       }
 
-      // 3. Умножение "X×Y"
+      // 3. Урон + умножение (например: "45 ед. + 3×30 ед.")
+      const sumMultMatch = damageStr.match(/(\d+)\s*ед?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
+      if (sumMultMatch) {
+        const direct = parseInt(sumMultMatch[1]);
+        const count = parseInt(sumMultMatch[2]);
+        const per = parseInt(sumMultMatch[3]);
+        const base = direct + count * per;
+        return { type: 'summult', direct, count, per, base, display, formula: `${direct} + ${count}×${per}` };
+      }
+
+      // 4. Простое умножение X×Y (например: "65×3")
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
-        const base = parseInt(multMatch[1]) * parseInt(multMatch[2]);
-        return { base, display, detail: `${parseInt(multMatch[1])}×${parseInt(multMatch[2])}` };
+        const count = parseInt(multMatch[1]);
+        const per = parseInt(multMatch[2]);
+        const base = count * per;
+        return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 4. "X пуль/осколков/дробинок по Y"
-      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза|пуль|осколк(?:а|ов)?|дробинок)\s*по\s*(\d+)/i);
+      // 5. Множественные попадания: "X пуль/осколков/дробинок/ракет по Y"
+      const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза)\s*по\s*(\d+)/i);
       if (hitsMatch) {
-        const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
         const count = parseInt(hitsMatch[1]);
         const per = parseInt(hitsMatch[2]);
-        const word = hitsMatch[0].match(/удар|раз|раза|пуль|осколк|дробинок/i)[0];
-        return { base, display, detail: `${count} ${word} по ${per}` };
+        const base = count * per;
+        return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 5. "по X ед." – просто число
-      const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
-      if (byMatch) {
-        return { base: parseInt(byMatch[1]), display, detail: '' };
-      }
-
-      // 6. Если есть "взрыв" или "удар" – берём первое число
-      if (/взрыв|удар/i.test(damageStr)) {
-        const firstNum = damageStr.match(/(\d+)/);
-        if (firstNum) return { base: parseInt(firstNum[1]), display, detail: '' };
-      }
-
-      // 7. Иначе – просто число
+      // 6. Простое число
       const firstNum = damageStr.match(/(\d+)/);
-      return { base: firstNum ? parseInt(firstNum[1]) : 0, display, detail: '' };
+      if (firstNum) {
+        const base = parseInt(firstNum[1]);
+        return { type: 'simple', base, display, formula: `${base}` };
+      }
+
+      return { type: 'none', base: 0, display, formula: '-' };
     }
 
     // ========== КАЛЬКУЛЯТОР ==========
@@ -176,7 +179,7 @@
         infiniteWeapons.forEach(w => {
           if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
-          if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
+          if (parsed.type !== 'none' && parsed.base > 0) {
             allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
           }
         });
@@ -186,7 +189,7 @@
         upgradeWeapons.forEach(w => {
           if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
-          if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
+          if (parsed.type !== 'none' && parsed.base > 0) {
             allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
           }
         });
@@ -197,59 +200,65 @@
         return;
       }
 
-      allWeapons.sort((a, b) => {
-        const aVal = a.parsed.min !== undefined ? (a.parsed.min + a.parsed.max) / 2 : a.parsed.base;
-        const bVal = b.parsed.min !== undefined ? (b.parsed.min + b.parsed.max) / 2 : b.parsed.base;
-        return bVal - aVal;
-      });
+      // Сортировка по общему базовому урону
+      allWeapons.sort((a, b) => b.parsed.base - a.parsed.base);
 
       allWeapons.forEach(w => {
         const card = document.createElement('div');
         card.className = 'card';
+        const coeff = attack / (attack + armor);
 
-        let damageHTML = '';
-
-        if (w.parsed.min !== undefined && w.parsed.max !== undefined) {
+        if (w.parsed.type === 'range') {
           // Диапазон
-          const minReal = (w.parsed.min * attack) / (attack + armor);
-          const maxReal = (w.parsed.max * attack) / (attack + armor);
-          damageHTML = `
-            <div class="info">⚔️ Базовый урон: ${w.parsed.display}</div>
+          const minReal = Math.round(w.parsed.min * coeff);
+          const maxReal = Math.round(w.parsed.max * coeff);
+          card.innerHTML = `
+            <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
+            <h3>${w.name}</h3>
+            <div class="info">${w.type}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
             <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
-              💥 Реальный урон: ${Math.round(minReal)}–${Math.round(maxReal)}
+              💥 Реальный урон: ${minReal}–${maxReal}
+            </div>
+            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
+              (при атаке ${attack} / броне ${armor})
+            </div>
+          `;
+        } else if (w.parsed.type === 'explosion' || w.parsed.type === 'summult') {
+          // Взрыв + осколки (или прямой + множитель)
+          const directReal = Math.round(w.parsed.direct * coeff);
+          const perReal = Math.round(w.parsed.per * coeff);
+          const count = w.parsed.count;
+          const totalReal = Math.round(w.parsed.base * coeff);
+          card.innerHTML = `
+            <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
+            <h3>${w.name}</h3>
+            <div class="info">${w.type}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
+            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
+              💥 Реальный урон: ${totalReal} (${directReal} + ${count}×${perReal})
+            </div>
+            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
+              (при атаке ${attack} / броне ${armor})
             </div>
           `;
         } else {
-          const base = w.parsed.base;
-          const realDamage = (base * attack) / (attack + armor);
-          let detailText = '';
-          if (w.parsed.detail) {
-            detailText = ` (от ${w.parsed.detail})`;
-          }
-          const maxDmg = allWeapons.reduce((max, item) => {
-            const val = item.parsed.min !== undefined ? (item.parsed.min + item.parsed.max) / 2 : item.parsed.base;
-            return Math.max(max, val);
-          }, 1);
-          const ratio = Math.min(1, base / maxDmg);
-          const red = Math.round(50 + 205 * ratio);
-          const green = Math.round(200 - 150 * ratio);
-          damageHTML = `
-            <div class="info">⚔️ Базовый урон: ${w.parsed.display}</div>
-            <div class="info" style="color: rgb(${red}, ${green}, 50); font-weight: 700; font-size: 1.1rem;">
-              💥 Реальный урон: ${Math.round(realDamage)}${detailText}
+          // Простой или умножение
+          const totalReal = Math.round(w.parsed.base * coeff);
+          // Для простого умножения показываем просто число, без скобок
+          card.innerHTML = `
+            <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
+            <h3>${w.name}</h3>
+            <div class="info">${w.type}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
+            <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
+              💥 Реальный урон: ${totalReal}
+            </div>
+            <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
+              (при атаке ${attack} / броне ${armor})
             </div>
           `;
         }
-
-        card.innerHTML = `
-          <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
-          <h3>${w.name}</h3>
-          <div class="info">${w.type}</div>
-          ${damageHTML}
-          <div class="info" style="font-size: 0.85rem; color: #ffffff; font-weight: 700; text-shadow: 0 0 10px rgba(0,0,0,0.8);">
-            (при атаке ${attack} / броне ${armor})
-          </div>
-        `;
         container.appendChild(card);
       });
     }
