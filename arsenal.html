@@ -115,11 +115,11 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (с сохранением исходной строки) ==========
+    // ========== ПАРСИНГ УРОНА (с учётом пуль, осколков, дробинок) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { base: 0, display: damageStr || '—' };
 
-      const display = damageStr; // сохраняем исходную строку
+      const display = damageStr;
 
       // 1. Обработка диапазона "от X до Y" или "X–Y" или "X - Y"
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || 
@@ -137,8 +137,8 @@
         return { base, display };
       }
 
-      // 3. Обработка фразы "X ударов по Y" или "X раза по Y"
-      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза)\s*по\s*(\d+)/i);
+      // 3. Обработка фразы "X ударов по Y", "X раза по Y", "X пуль по Y", "X осколков по Y", "X дробинок по Y"
+      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза|пуль|осколков|дробинок)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
         return { base, display };
@@ -161,7 +161,7 @@
       return { base: firstNum ? parseInt(firstNum[1]) : 0, display };
     }
 
-    // ========== КАЛЬКУЛЯТОР (Кувалда исключена, отображение с исходной строкой) ==========
+    // ========== КАЛЬКУЛЯТОР (с расширенным списком исключений) ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 100;
@@ -172,10 +172,17 @@
 
       const allWeapons = [];
 
+      // Список id оружия, которое НЕ зависит от атаки/брони игрока
+      const excludedIds = [32, 29, 44, 10, 14];
+      // 32 — Кувалда (бесконечное)
+      // 29 — Блокиратор (бесконечное)
+      // 44 — Заземлитель (бесконечное)
+      // 10 — Негатор (апгрейд)
+      // 14 — Зимний страж (апгрейд)
+
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
-          // Исключаем Кувалду (id: 32)
-          if (w.id === 32) return;
+          if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
           if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
             allWeapons.push({ ...w, parsed, type: 'Бесконечное' });
@@ -185,6 +192,7 @@
 
       if (typeof upgradeWeapons !== 'undefined') {
         upgradeWeapons.forEach(w => {
+          if (excludedIds.includes(w.id)) return;
           const parsed = parseDamageValue(w.damage);
           if (parsed.base > 0 || (parsed.min !== undefined && parsed.max !== undefined)) {
             allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
