@@ -115,7 +115,7 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (с учётом пуль, осколков, дробинок) ==========
+    // ========== ПАРСИНГ УРОНА (с учётом взрыва + осколки, пуль, дробинок) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { base: 0, display: damageStr || '—' };
 
@@ -130,33 +130,43 @@
         return { min, max, display };
       }
 
-      // 2. Обработка умножения "X×Y" или "X*Y" или "X x Y"
+      // 2. Обработка "взрыв + X осколков по Y" или "урон + X осколков по Y"
+      const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*осколк(?:а|ов)?\s*по\s*(\d+)/i);
+      if (explosionMatch) {
+        const direct = parseInt(explosionMatch[1]);
+        const count = parseInt(explosionMatch[2]);
+        const perShard = parseInt(explosionMatch[3]);
+        const base = direct + count * perShard;
+        return { base, display };
+      }
+
+      // 3. Обработка умножения "X×Y" или "X*Y" или "X x Y"
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const base = parseInt(multMatch[1]) * parseInt(multMatch[2]);
         return { base, display };
       }
 
-      // 3. Обработка фразы "X ударов по Y", "X раза по Y", "X пуль по Y", "X осколков по Y", "X дробинок по Y"
-      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза|пуль|осколков|дробинок)\s*по\s*(\d+)/i);
+      // 4. Обработка фразы "X ударов по Y", "X раза по Y", "X пуль по Y", "X осколков по Y", "X дробинок по Y"
+      const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза|пуль|осколк(?:а|ов)?|дробинок)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
         return { base, display };
       }
 
-      // 4. Обработка "по X ед." – берём X
+      // 5. Обработка "по X ед." – берём X
       const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
       if (byMatch) {
         return { base: parseInt(byMatch[1]), display };
       }
 
-      // 5. Если есть "взрыв" или "удар" – берём первое число
+      // 6. Если есть "взрыв" или "удар" – берём первое число
       if (/взрыв|удар/i.test(damageStr)) {
         const firstNum = damageStr.match(/(\d+)/);
         if (firstNum) return { base: parseInt(firstNum[1]), display };
       }
 
-      // 6. Иначе – берём первое число
+      // 7. Иначе – берём первое число
       const firstNum = damageStr.match(/(\d+)/);
       return { base: firstNum ? parseInt(firstNum[1]) : 0, display };
     }
