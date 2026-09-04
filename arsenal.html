@@ -153,8 +153,9 @@
 
       const allWeapons = [];
       // Исключаем: Кувалда(32), Блокиратор(29), Заземлитель(44), Негатор(10), Зимний страж(14),
-      // Отбойный молоток(3), Бур(17), Паразит(22), Газовая граната(34), Морозящий газ(12)
-      const excludedIds = [32, 29, 44, 10, 14, 3, 17, 22, 34, 12];
+      // Отбойный молоток(3), Бур(17), Паразит(22), Газовая граната(34), Морозящий газ(12),
+      // Коктейль Молотова(21), Огнемёт(24), Горящий свин(28), АК-47(20), Котоудар(49)
+      const excludedIds = [32, 29, 44, 10, 14, 3, 17, 22, 34, 12, 21, 24, 28, 20, 49];
 
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
@@ -215,7 +216,7 @@
           card.innerHTML = `
             <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
             <h3>${w.name}</h3>
-            <div class="info">${w.type}</div>
+            <div class>${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
             <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal}</div>
             <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
