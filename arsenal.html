@@ -67,23 +67,9 @@
       </div>
       <div id="calculator-results" class="card-grid"></div>
 
+      <!-- РАМОЧКА УБРАНА -->
       <div style="
         margin-top: 24px;
-        padding: 14px 16px;
-        background: rgba(79, 70, 229, 0.1);
-        border-left: 4px solid #818cf8;
-        border-radius: 8px;
-        color: #cbd5e1;
-        font-size: 1.1rem;
-        font-weight: 700;
-        text-align: center;
-        text-transform: uppercase;
-      ">
-        🔹 Урон указан как за единицу выстрела или единичный удар от осколка
-      </div>
-
-      <div style="
-        margin-top: 12px;
         padding: 16px;
         background: rgba(251, 191, 36, 0.08);
         border-left: 4px solid #fcd34d;
@@ -115,63 +101,66 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (с учётом взрыва + осколки, пуль, дробинок) ==========
+    // ========== ПАРСИНГ УРОНА (с сохранением пояснения) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { base: 0, display: damageStr || '—' };
 
       const display = damageStr;
 
-      // 1. Обработка диапазона "от X до Y" или "X–Y" или "X - Y"
+      // 1. Диапазон "от X до Y"
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || 
                          damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]);
         const max = parseInt(rangeMatch[2]);
-        return { min, max, display };
+        return { min, max, display, detail: 'диапазон' };
       }
 
-      // 2. Обработка "взрыв + X осколков по Y" или "урон + X осколков по Y"
+      // 2. Взрыв + осколки
       const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*осколк(?:а|ов)?\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]);
         const count = parseInt(explosionMatch[2]);
         const perShard = parseInt(explosionMatch[3]);
         const base = direct + count * perShard;
-        return { base, display };
+        return { base, display, detail: `${count} осколк${count>1?'а':'ов'}` };
       }
 
-      // 3. Обработка умножения "X×Y" или "X*Y" или "X x Y"
+      // 3. Умножение "X×Y"
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const base = parseInt(multMatch[1]) * parseInt(multMatch[2]);
-        return { base, display };
+        return { base, display, detail: `${parseInt(multMatch[1])}×${parseInt(multMatch[2])}` };
       }
 
-      // 4. Обработка фразы "X ударов по Y", "X раза по Y", "X пуль по Y", "X осколков по Y", "X дробинок по Y"
+      // 4. "X пуль/осколков/дробинок по Y"
       const hitsMatch = damageStr.match(/(\d+)\s*(?:удар|раз|раза|пуль|осколк(?:а|ов)?|дробинок)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const base = parseInt(hitsMatch[1]) * parseInt(hitsMatch[2]);
-        return { base, display };
+        const count = parseInt(hitsMatch[1]);
+        const per = parseInt(hitsMatch[2]);
+        const word = hitsMatch[0].match(/удар|раз|раза|пуль|осколк|дробинок/i)[0];
+        return { base, display, detail: `${count} ${word} по ${per}` };
       }
 
-      // 5. Обработка "по X ед." – берём X
+      // 5. "по X ед." – просто число
       const byMatch = damageStr.match(/по\s*(\d+)\s*ед/i);
       if (byMatch) {
-        return { base: parseInt(byMatch[1]), display };
+        return { base: parseInt(byMatch[1]), display, detail: '' };
       }
 
       // 6. Если есть "взрыв" или "удар" – берём первое число
       if (/взрыв|удар/i.test(damageStr)) {
         const firstNum = damageStr.match(/(\d+)/);
-        if (firstNum) return { base: parseInt(firstNum[1]), display };
+        if (firstNum) return { base: parseInt(firstNum[1]), display, detail: '' };
       }
 
-      // 7. Иначе – берём первое число
+      // 7. Иначе – просто число
       const firstNum = damageStr.match(/(\d+)/);
-      return { base: firstNum ? parseInt(firstNum[1]) : 0, display };
+      return { base: firstNum ? parseInt(firstNum[1]) : 0, display, detail: '' };
     }
 
-    // ========== КАЛЬКУЛЯТОР (с расширенным списком исключений) ==========
+    // ========== КАЛЬКУЛЯТОР ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 100;
@@ -181,14 +170,7 @@
       container.innerHTML = '';
 
       const allWeapons = [];
-
-      // Список id оружия, которое НЕ зависит от атаки/брони игрока
-      const excludedIds = [32, 29, 44, 10, 14];
-      // 32 — Кувалда (бесконечное)
-      // 29 — Блокиратор (бесконечное)
-      // 44 — Заземлитель (бесконечное)
-      // 10 — Негатор (апгрейд)
-      // 14 — Зимний страж (апгрейд)
+      const excludedIds = [32, 29, 44, 10, 14]; // Кувалда, Блокиратор, Заземлитель, Негатор, Зимний страж
 
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
@@ -215,7 +197,6 @@
         return;
       }
 
-      // Сортировка: для диапазонов используем среднее значение
       allWeapons.sort((a, b) => {
         const aVal = a.parsed.min !== undefined ? (a.parsed.min + a.parsed.max) / 2 : a.parsed.base;
         const bVal = b.parsed.min !== undefined ? (b.parsed.min + b.parsed.max) / 2 : b.parsed.base;
@@ -227,28 +208,24 @@
         card.className = 'card';
 
         let damageHTML = '';
-        let baseDamageDisplay = '';
-        let realDamageDisplay = '';
 
         if (w.parsed.min !== undefined && w.parsed.max !== undefined) {
-          // Диапазон урона
+          // Диапазон
           const minReal = (w.parsed.min * attack) / (attack + armor);
           const maxReal = (w.parsed.max * attack) / (attack + armor);
-          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.display}`;
-          realDamageDisplay = `💥 Реальный урон: ${Math.round(minReal)}–${Math.round(maxReal)}`;
           damageHTML = `
-            <div class="info">${baseDamageDisplay}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.display}</div>
             <div class="info" style="color: #fcd34d; font-weight: 700; font-size: 1.1rem;">
-              ${realDamageDisplay}
+              💥 Реальный урон: ${Math.round(minReal)}–${Math.round(maxReal)}
             </div>
           `;
         } else {
-          // Обычный урон (уже с учётом умножения в base)
           const base = w.parsed.base;
           const realDamage = (base * attack) / (attack + armor);
-          baseDamageDisplay = `⚔️ Базовый урон: ${w.parsed.display}`;
-          realDamageDisplay = `💥 Реальный урон: ${Math.round(realDamage)}`;
-          // Цвет от зелёного к красному
+          let detailText = '';
+          if (w.parsed.detail) {
+            detailText = ` (от ${w.parsed.detail})`;
+          }
           const maxDmg = allWeapons.reduce((max, item) => {
             const val = item.parsed.min !== undefined ? (item.parsed.min + item.parsed.max) / 2 : item.parsed.base;
             return Math.max(max, val);
@@ -257,9 +234,9 @@
           const red = Math.round(50 + 205 * ratio);
           const green = Math.round(200 - 150 * ratio);
           damageHTML = `
-            <div class="info">${baseDamageDisplay}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.display}</div>
             <div class="info" style="color: rgb(${red}, ${green}, 50); font-weight: 700; font-size: 1.1rem;">
-              ${realDamageDisplay}
+              💥 Реальный урон: ${Math.round(realDamage)}${detailText}
             </div>
           `;
         }
