@@ -69,31 +69,19 @@
       });
     });
 
+    // ========== ПАРСИНГ УРОНА (универсальный, с приоритетами) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
 
-      // 1. Диапазон
+      // 1. Диапазон "от X до Y"
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]), max = parseInt(rangeMatch[2]);
         return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // 2. Множественные удары (отскоки, выстрелы, очереди, коты, ракеты и т.д.)
-      // Ищем все числа в строке и перемножаем их, если есть маркеры множественности
-      const multMarkers = /по|отскок(?:а|ов)?|выстрел(?:а|ов)?|очеред(?:и|ей)?|ракет|снарядов|разрядов|осколк(?:а|ов)?|дробинок|пуль|удар|раз|раза|кота|кот|куск(?:а|ов)?|част(?:и|ей)?/;
-      if (multMarkers.test(damageStr)) {
-        const numbers = damageStr.match(/\d+/g);
-        if (numbers && numbers.length >= 2) {
-          // Перемножаем все числа, если их ≥ 2
-          const base = numbers.reduce((acc, num) => acc * parseInt(num), 1);
-          const formula = numbers.join('×');
-          return { type: 'mult', count: numbers.length, per: 1, base, display, formula };
-        }
-      }
-
-      // 3. Взрыв + осколки
+      // 2. Взрыв + осколки/куски (например: "40 ед. взрыв + 6 осколков по 35")
       const explosionMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*(?:осколк(?:а|ов)?|куск(?:а|ов)?|част(?:и|ей)?)\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]), count = parseInt(explosionMatch[2]), per = parseInt(explosionMatch[3]);
@@ -102,7 +90,7 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 4. Взрыв + умножение
+      // 3. Взрыв + умножение (например: "45 ед. взрыв + 9×15 ед.")
       const explosionMultMatch = damageStr.match(/(\d+)\s*ед\s*(?:взрыв|урон)?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (explosionMultMatch) {
         const direct = parseInt(explosionMultMatch[1]), count = parseInt(explosionMultMatch[2]), per = parseInt(explosionMultMatch[3]);
@@ -111,7 +99,7 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 5. Прямой + умножение
+      // 4. Прямой + умножение (без слова взрыв) (например: "45 ед. + 3×30 ед.")
       const sumMultMatch = damageStr.match(/(\d+)\s*ед?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (sumMultMatch) {
         const direct = parseInt(sumMultMatch[1]), count = parseInt(sumMultMatch[2]), per = parseInt(sumMultMatch[3]);
@@ -120,7 +108,25 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 6. Простое число
+      // 5. Множественные попадания (без взрыва) – "X пуль/осколков/ракет по Y"
+      const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза|отскок(?:а|ов)?|выстрел(?:а|ов)?|очеред(?:и|ей)?|кота|кот)\s*по\s*(\d+)/i);
+      if (hitsMatch) {
+        const count = parseInt(hitsMatch[1]), per = parseInt(hitsMatch[2]);
+        const base = count * per;
+        const formula = `${count}×${per}`;
+        return { type: 'mult', count, per, base, display, formula };
+      }
+
+      // 6. Простое умножение X×Y (например: "65×3")
+      const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
+      if (multMatch) {
+        const count = parseInt(multMatch[1]), per = parseInt(multMatch[2]);
+        const base = count * per;
+        return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
+      }
+
+      // 7. Если есть несколько чисел подряд (например, "3 кота, 2 отскока по 50" – но это уже обработано hitsMatch)
+      //     если всё ещё остались числа без маркеров, то просто первое число
       const firstNum = damageStr.match(/(\d+)/);
       if (firstNum) {
         const base = parseInt(firstNum[1]);
@@ -130,6 +136,7 @@
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
+    // ========== КАЛЬКУЛЯТОР ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 0;
@@ -138,7 +145,7 @@
       container.innerHTML = '';
 
       const allWeapons = [];
-      const excludedIds = [32, 29, 44, 10, 14];
+      const excludedIds = [32, 29, 44, 10, 14]; // Кувалда, Блокиратор, Заземлитель, Негатор, Зимний страж
 
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
@@ -192,6 +199,16 @@
             <div class="info">${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
             <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal} (${detail})</div>
+            <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
+          `;
+        } else if (w.parsed.type === 'mult') {
+          const totalReal = Math.round(w.parsed.base * coeff);
+          card.innerHTML = `
+            <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
+            <h3>${w.name}</h3>
+            <div class="info">${w.type}</div>
+            <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
+            <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal}</div>
             <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
           `;
         } else {
