@@ -58,6 +58,7 @@
   <script src="data.js"></script>
   <script src="render.js"></script>
   <script>
+    // Переключение вкладок (без модального окна)
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -65,23 +66,25 @@
         this.classList.add('active');
         const tabId = this.dataset.tab + '-tab';
         document.getElementById(tabId).classList.add('active');
-        if (tabId === 'calculator-tab') calculateDamage();
+        if (tabId === 'calculator-tab') {
+          calculateDamage();
+        }
       });
     });
 
-    // ========== УНИВЕРСАЛЬНЫЙ ПАРСИНГ УРОНА ==========
+    // ========== ПАРСИНГ УРОНА (универсальный) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
 
-      // 1. Диапазон
+      // Диапазон
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]), max = parseInt(rangeMatch[2]);
         return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // 2. Взрыв + осколки (ищем "взрыв" и "осколки" или "куски")
+      // Взрыв + осколки
       const explosionMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*(?:от\s*)?(?:взрыв|урон)\s*\+\s*(\d+)\s*(?:осколк(?:а|ов)?|куск(?:а|ов)?|част(?:и|ей)?)\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]);
@@ -92,7 +95,7 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 3. Взрыв + умножение (например "45 ед. взрыв + 9×15 ед.")
+      // Взрыв + умножение
       const explosionMultMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*(?:от\s*)?(?:взрыв|урон)\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (explosionMultMatch) {
         const direct = parseInt(explosionMultMatch[1]);
@@ -103,7 +106,7 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 4. Прямой + умножение (без слова взрыв)
+      // Прямой + умножение (без слова взрыв)
       const sumMultMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (sumMultMatch) {
         const direct = parseInt(sumMultMatch[1]);
@@ -114,7 +117,7 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // 5. Множественные попадания (без взрыва) – "X пуль/осколков/ракет по Y"
+      // Множественные попадания (без взрыва)
       const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза|отскок(?:а|ов)?|выстрел(?:а|ов)?|очеред(?:и|ей)?|кота|кот)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const count = parseInt(hitsMatch[1]);
@@ -124,7 +127,7 @@
         return { type: 'mult', count, per, base, display, formula };
       }
 
-      // 6. Простое умножение X×Y
+      // Простое умножение X×Y
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const count = parseInt(multMatch[1]);
@@ -133,7 +136,7 @@
         return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // 7. Простое число
+      // Простое число
       const firstNum = damageStr.match(/(\d+)/);
       if (firstNum) {
         const base = parseInt(firstNum[1]);
@@ -216,7 +219,7 @@
           card.innerHTML = `
             <div class="card-icon"><img src="${w.image}" alt="${w.name}" loading="lazy"></div>
             <h3>${w.name}</h3>
-            <div class>${w.type}</div>
+            <div class="info">${w.type}</div>
             <div class="info">⚔️ Базовый урон: ${w.parsed.formula}</div>
             <div class="info" style="color:#fcd34d; font-weight:700; font-size:1.1rem;">💥 Реальный урон: ${totalReal}</div>
             <div class="info" style="font-size:0.85rem; color:#fff; font-weight:700; text-shadow:0 0 10px rgba(0,0,0,0.8);">(при атаке ${attack} / броне ${armor})</div>
