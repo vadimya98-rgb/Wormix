@@ -812,7 +812,7 @@ const upgradeWeapons = [
     image: "https://i.ibb.co/B2x4kBTv/Screenshot-20260902-234855-Wormix.jpg",
     type: "Апгрейд",
     level: "-",
-    damage: "2×6×14",
+    damage: "2×84",
     maxUpgrade: "-",
     price: "-",
     upgradeCost: "-",
