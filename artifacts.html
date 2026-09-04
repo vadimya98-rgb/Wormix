@@ -317,7 +317,13 @@
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">⚡ Скоро здесь появятся артефакты</p>';
         return;
       }
-      artifacts.forEach(a => {
+      // Фильтруем: показываем только базовые артефакты (id 1–17), исключаем итоговые (id 18, 19)
+      const baseArtifacts = artifacts.filter(a => a.id <= 17);
+      if (baseArtifacts.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center;">⚡ База артефактов пуста</p>';
+        return;
+      }
+      baseArtifacts.forEach(a => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
