@@ -6,7 +6,7 @@
   <title>Арсенал — Wormix Information</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ===== СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА (увеличение иконки) ===== */
+    /* ===== СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА ===== */
     .image-modal {
       display: none;
       position: fixed;
@@ -24,9 +24,9 @@
       margin: auto;
       display: block;
       max-width: 90%;
-      max-height: 90%;
+      max-height: 80%;
       position: absolute;
-      top: 50%;
+      top: 45%;
       left: 50%;
       transform: translate(-50%, -50%);
       border-radius: 12px;
@@ -47,10 +47,17 @@
     .image-modal .close-btn:hover {
       color: #bbb;
     }
+    #modalCaption {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
-  <!-- Фоновый слой (если есть) -->
   <div id="bg-layer"></div>
 
   <div class="container">
@@ -76,10 +83,9 @@
       <div id="consumable-weapon-list" class="card-grid"></div>
     </div>
 
-    <!-- ===== ОБНОВЛЁННАЯ ВКЛАДКА "АПГРЕЙД" ===== -->
     <div id="upgrade-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; font-weight: 600; margin-bottom: 12px;">
-        🔥 Больше ресурсов = Дешевле апгрейд.
+        🔥 Самый нужный арсенал для битв
       </p>
       <div id="upgrade-weapon-list" class="card-grid"></div>
     </div>
@@ -111,10 +117,11 @@
     </div>
   </div>
 
-  <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ УВЕЛИЧЕНИЯ ИКОНКИ ===== -->
+  <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
   <div id="imageModal" class="image-modal" onclick="closeModal()">
     <span class="close-btn" onclick="closeModal()">&times;</span>
     <img class="modal-content" id="modalImage" src="" alt="Увеличенное изображение">
+    <div id="modalCaption"></div>
   </div>
 
   <script src="arsenal-data.js"></script>
@@ -134,12 +141,19 @@
       });
     });
 
-    // ===== ФУНКЦИИ ДЛЯ МОДАЛЬНОГО ОКНА =====
-    function openModal(imageSrc) {
+    // ===== МОДАЛЬНОЕ ОКНО =====
+    function openModal(imageSrc, weaponName) {
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
+      const modalCaption = document.getElementById('modalCaption');
       modal.style.display = 'block';
       modalImg.src = imageSrc;
+      modalCaption.innerHTML = `
+        <div style="text-align:center; margin-top: 12px;">
+          <div style="font-size: 1.4rem; color: #fff; font-weight: 700;">${weaponName}</div>
+          <div style="font-size: 2rem; font-weight: 900; color: #fcd34d; letter-spacing: 4px; margin-top: 4px; text-transform: uppercase;">Апгрейд</div>
+        </div>
+      `;
       document.body.style.overflow = 'hidden';
     }
 
@@ -153,7 +167,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ========== ПАРСИНГ УРОНА ==========
+    // ========== КАЛЬКУЛЯТОР ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
@@ -220,7 +234,6 @@
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
-    // ========== КАЛЬКУЛЯТОР ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 0;
