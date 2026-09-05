@@ -487,6 +487,87 @@ const bossHats = [
 ];
 
 // ============================================
+//    УНИКАЛЬНЫЕ ШАПКИ (15 штук)
+// ============================================
+const uniqueHats = [
+    {
+        id: 1,
+        image: "https://i.ibb.co/WpnfwXcL/4-Ue-Pdb9g-ZI.jpg",
+        name: "Шапка 1"
+    },
+    {
+        id: 2,
+        image: "https://i.ibb.co/YVWfDg5/4-Ue-Pdb9g-ZI-1.jpg",
+        name: "Шапка 2"
+    },
+    {
+        id: 3,
+        image: "https://i.ibb.co/KcWQdLzG/4-Ue-Pdb9g-ZI-2.jpg",
+        name: "Шапка 3"
+    },
+    {
+        id: 4,
+        image: "https://i.ibb.co/jkHwSNTd/4-Ue-Pdb9g-ZI-3.jpg",
+        name: "Шапка 4"
+    },
+    {
+        id: 5,
+        image: "https://i.ibb.co/fgQx3q3/TY8-Q9hh-Cy3g.jpg",
+        name: "Шапка 5"
+    },
+    {
+        id: 6,
+        image: "https://i.ibb.co/SDYM9CQf/g-At-Cyqy-LD3o.jpg",
+        name: "Шапка 6"
+    },
+    {
+        id: 7,
+        image: "https://i.ibb.co/FkB260Mp/0d-Nd-ECmaytk.jpg",
+        name: "Шапка 7"
+    },
+    {
+        id: 8,
+        image: "https://i.ibb.co/vtgLgT5/AEo-JWk-BDbp-A.jpg",
+        name: "Шапка 8"
+    },
+    {
+        id: 9,
+        image: "https://i.ibb.co/bMPJF87G/b-Lvn67-Pb-Sh0.jpg",
+        name: "Шапка 9"
+    },
+    {
+        id: 10,
+        image: "https://i.ibb.co/PZMFCCsH/2-G0-Xf-N0pcm-E.jpg",
+        name: "Шапка 10"
+    },
+    {
+        id: 11,
+        image: "https://i.ibb.co/C3kHwFLz/b-8-X-Gu-OCww.jpg",
+        name: "Шапка 11"
+    },
+    {
+        id: 12,
+        image: "https://i.ibb.co/R4j2Gp3m/u8-li-Vv4-HYs.jpg",
+        name: "Шапка 12"
+    },
+    {
+        id: 13,
+        image: "https://i.ibb.co/yBNCK6pW/DZu3-OXj-KR0g.jpg",
+        name: "Шапка 13"
+    },
+    {
+        id: 14,
+        image: "https://i.ibb.co/qFWKDn7W/VU2rqs-H1elw.jpg",
+        name: "Шапка 14"
+    },
+    {
+        id: 15,
+        image: "https://i.ibb.co/mrJY2xtH/gay-O29-C-4-PU.jpg",
+        name: "Шапка 15"
+    }
+];
+
+// ============================================
 //    ЭМБЛЕМА ВОРМИКС
 // ============================================
 const wormixEmblem = {
