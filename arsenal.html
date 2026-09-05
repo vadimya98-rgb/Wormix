@@ -167,7 +167,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ========== КАЛЬКУЛЯТОР ==========
+    // ========== ПАРСИНГ УРОНА ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
@@ -234,6 +234,7 @@
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
+    // ========== КАЛЬКУЛЯТОР (только базовое оружие: бесконечное + штучное) ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 0;
@@ -242,7 +243,9 @@
       container.innerHTML = '';
 
       const allWeapons = [];
-      const excludedIds = [32, 29, 44, 10, 14, 3, 17, 22, 34, 12, 21, 24, 28, 20, 49];
+      // Исключаем апгрейды – они не участвуют в калькуляторе
+      // Также исключаем особые виды оружия, урон которых не зависит от атаки/брони
+      const excludedIds = [32, 29, 44, 3, 17, 22, 34, 21, 24, 28, 20, 49];
 
       if (typeof infiniteWeapons !== 'undefined') {
         infiniteWeapons.forEach(w => {
@@ -252,11 +255,10 @@
         });
       }
 
-      if (typeof upgradeWeapons !== 'undefined') {
-        upgradeWeapons.forEach(w => {
-          if (excludedIds.includes(w.id)) return;
+      if (typeof consumableWeapons !== 'undefined') {
+        consumableWeapons.forEach(w => {
           const parsed = parseDamageValue(w.damage);
-          if (parsed.type !== 'none' && parsed.base > 0) allWeapons.push({ ...w, parsed, type: 'Апгрейд' });
+          if (parsed.type !== 'none' && parsed.base > 0) allWeapons.push({ ...w, parsed, type: 'Штучное' });
         });
       }
 
