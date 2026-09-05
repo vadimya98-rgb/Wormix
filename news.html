@@ -170,9 +170,7 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
-        const tabId = this.dataset.tab + '-tab';
-        document.getElementById(tabId).classList.add('active');
-        // При переключении можно перезагружать данные (если нужно)
+        document.getElementById(this.dataset.tab + '-tab').classList.add('active');
       });
     });
 
@@ -183,9 +181,10 @@
         if (!response.ok) throw new Error('Файл не найден');
         const data = await response.json();
         if (!data.news || data.news.length === 0) {
-          document.querySelectorAll('.news-list').forEach(el => {
-            el.innerHTML = '<div class="empty-news">📭 Пока нет новостей. Загляните позже!</div>';
-          });
+          // Если файл пустой – показываем заглушки для каждой вкладки
+          document.getElementById('main-list').innerHTML = '<div class="empty-news">📭 Скоро здесь будут актуальные новости, следите за обновлениями.</div>';
+          document.getElementById('contests-list').innerHTML = '<div class="empty-news">📭 Здесь скоро появятся актуальные конкурсы, следите за обновлениями.</div>';
+          document.getElementById('results-list').innerHTML = '<div class="empty-news">📭 Когда появятся конкурсы, тогда и будут актуальные результаты, следите за обновлениями.</div>';
           return;
         }
 
@@ -197,9 +196,9 @@
         const contests = sorted.filter(item => item.category === 'contest');
         const results = sorted.filter(item => item.category === 'result');
 
-        renderNews('main-list', mainNews);
-        renderNews('contests-list', contests);
-        renderNews('results-list', results);
+        renderNews('main-list', mainNews, '📭 Скоро здесь будут актуальные новости, следите за обновлениями.');
+        renderNews('contests-list', contests, '📭 Здесь скоро появятся актуальные конкурсы, следите за обновлениями.');
+        renderNews('results-list', results, '📭 Когда появятся конкурсы, тогда и будут актуальные результаты, следите за обновлениями.');
       } catch (error) {
         document.querySelectorAll('.news-list').forEach(el => {
           el.innerHTML = '<div class="empty-news">❌ Не удалось загрузить новости. Проверьте файл news.json</div>';
@@ -208,11 +207,11 @@
       }
     }
 
-    function renderNews(containerId, items) {
+    function renderNews(containerId, items, emptyMessage) {
       const container = document.getElementById(containerId);
       if (!container) return;
       if (items.length === 0) {
-        container.innerHTML = '<div class="empty-news">📭 В этой категории пока ничего нет.</div>';
+        container.innerHTML = `<div class="empty-news">${emptyMessage}</div>`;
         return;
       }
       container.innerHTML = items.map(item => {
