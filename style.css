@@ -15,6 +15,7 @@ body {
   background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
   background-size: 400% 400%;
   animation: gradientMove 20s ease infinite;
+  position: relative;
 }
 
 @keyframes gradientMove {
@@ -23,8 +24,30 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-.main-bg { display: none; }
+/* ===== ФОНОВЫЙ СЛОЙ С ИКОНКАМИ ===== */
+#bg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
 
+.bg-icon {
+  position: absolute;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.bg-icon:hover {
+  opacity: 0.15 !important;
+  transform: scale(1.1);
+}
+
+/* ===== КОНТЕЙНЕР ===== */
 .container {
   position: relative;
   z-index: 1;
@@ -32,26 +55,33 @@ body {
   margin: 0 auto;
 }
 
+/* ===== НОВЫЙ ЗАГОЛОВОК ===== */
 header {
   text-align: center;
   margin-bottom: 24px;
 }
 
-h1 {
-  font-size: 2.2rem;
+header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 0;
   background: linear-gradient(135deg, #f7f7fc, #c4b5fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 40px rgba(196, 181, 253, 0.3);
+  letter-spacing: 4px;
 }
 
-.subtitle {
+header .subtitle {
+  font-size: 1.2rem;
   color: #e2e8f0;
   text-shadow: 0 0 20px rgba(0,0,0,0.7);
-  font-size: 0.95rem;
-  margin-top: 4px;
+  margin-top: -8px;
+  text-transform: lowercase;
+  letter-spacing: 6px;
+  opacity: 0.8;
 }
 
+/* ===== КНОПКИ ГЛАВНОЙ (2 В РЯД) ===== */
 .menu {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -95,7 +125,7 @@ h1 {
   transition: 0.3s;
 }
 
-/* ===== ПЕРСОНАЖИ (НОВЫЕ ССЫЛКИ) ===== */
+/* ===== ПЕРСОНАЖИ ===== */
 .menu-btn[data-char="dragon"]::before {
   background: url('https://i.ibb.co/Pvs3f2sr/Screenshot-20260902-161443-Wormix.jpg') no-repeat center center/cover;
 }
@@ -151,6 +181,9 @@ h1 {
   100% { transform: scale(0.95); box-shadow: 0 0 0px rgba(255, 200, 0, 0); }
 }
 
+/* ========================================
+   НАВИГАЦИЯ НА ВНУТРЕННИХ СТРАНИЦАХ
+======================================== */
 .top-nav {
   margin-bottom: 16px;
 }
@@ -168,6 +201,9 @@ h1 {
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ========================================
+   ВКЛАДКИ (арсенал, шапки, артефакты)
+======================================== */
 .tabs {
   display: flex;
   gap: 10px;
@@ -204,6 +240,9 @@ h1 {
   display: block;
 }
 
+/* ========================================
+   КАРТОЧКИ (арсенал, шапки, артефакты)
+======================================== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -252,6 +291,9 @@ h1 {
   padding-top: 8px;
 }
 
+/* ========================================
+   АДАПТАЦИЯ ПОД ТЕЛЕФОН
+======================================== */
 @media (max-width: 480px) {
   .menu-btn {
     aspect-ratio: 1 / 1;
@@ -268,5 +310,12 @@ h1 {
     font-size: 0.8rem;
     padding: 8px 12px;
     max-width: 140px;
+  }
+  header h1 {
+    font-size: 2.8rem;
+  }
+  header .subtitle {
+    font-size: 1rem;
+    letter-spacing: 4px;
   }
 }
