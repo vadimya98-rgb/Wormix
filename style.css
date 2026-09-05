@@ -81,10 +81,10 @@ header .subtitle {
   opacity: 0.8;
 }
 
-/* ===== КНОПКИ ГЛАВНОЙ ===== */
+/* ===== КНОПКИ ГЛАВНОЙ (3 В РЯД) ===== */
 .menu {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
@@ -316,9 +316,9 @@ header .subtitle {
   margin: auto;
   display: block;
   max-width: 90%;
-  max-height: 90%;
+  max-height: 80%;
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 12px;
@@ -339,11 +339,22 @@ header .subtitle {
 .image-modal .close-btn:hover {
   color: #bbb;
 }
+#modalCaption {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
 
 /* ========================================
    АДАПТАЦИЯ ПОД ТЕЛЕФОН
 ======================================== */
 @media (max-width: 480px) {
+  .menu {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .menu-btn {
     aspect-ratio: 1 / 1;
     border-radius: 20px;
@@ -355,7 +366,6 @@ header .subtitle {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
   }
-  /* На телефоне апгрейды тоже 2 в ряд (оставляем) */
   #upgrade-tab .card-grid {
     grid-template-columns: 1fr 1fr;
   }
