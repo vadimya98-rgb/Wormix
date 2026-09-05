@@ -36,23 +36,13 @@
     </div>
 
     <div id="calculator-tab" class="tab-content">
-      <!-- ===== НОВОЕ ПРИМЕЧАНИЕ СВЕРХУ ===== -->
-      <div style="
-        background: rgba(79, 70, 229, 0.1);
-        border-left: 4px solid #818cf8;
-        border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 20px;
-        color: #cbd5e1;
-        font-size: 0.95rem;
-        text-align: left;
-      ">
+      <div style="background: rgba(79, 70, 229, 0.1); border-left: 4px solid #818cf8; border-radius: 8px; padding: 16px; margin-bottom: 20px; color: #cbd5e1; font-size: 0.95rem; text-align: left;">
         <p style="margin-bottom: 8px;"><strong>⚠️ Важно:</strong> Точный урон в Wormix рассчитать невозможно – слишком много факторов, которые постоянно меняются: шапки, артефакты, погода, разброс осколков, случайные критические удары и т.д.</p>
-        <p style="margin-bottom: 4px;">Но этот калькулятор решает другую задачу: <strong>не посчитать точный урон, а понять, какое оружие эффективнее при текущих параметрах.</strong></p>
+        <p style="margin-bottom: 4px;">Но ваш калькулятор решает другую задачу: <strong>не посчитать точный урон, а понять, какое оружие эффективнее при текущих параметрах.</strong></p>
         <p style="margin-top: 8px; font-style: italic; color: #fcd34d;">✨ Магии от калькулятора ждать не стоит.</p>
       </div>
 
-      <p style="color: #94a3b8; text-align: center; margin-bottom: 16px;">Введите свои параметры, чтобы увидеть урон по каждому оружию</p>
+      <p style="color: #94a3b8; text-align: center; margin-bottom: 16px;">Введите свои параметры, чтобы увидеть реальный урон по каждому оружию</p>
       <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
         <div style="flex: 1; min-width: 120px;">
           <label style="color: #94a3b8; font-size: 0.9rem;">⚔️ Атака моя</label>
@@ -66,16 +56,16 @@
       </div>
       <div id="calculator-results" class="card-grid"></div>
 
-      <!-- ===== НИЖНЯЯ РАМКА (ОСТАВЛЕНА) ===== -->
       <div style="margin-top:24px; padding:16px; background:rgba(251,191,36,0.08); border-left:4px solid #fcd34d; border-radius:8px; color:#fcd34d; font-size:0.9rem; text-align:center;">
         ⚠️ Все параметры приблизительные. В реальном бою данные по урону могут отличаться из-за случайных факторов (критические удары, сопротивления, баффы и дебаффы).
       </div>
     </div>
   </div>
 
-  <script src="data.js"></script>
+  <script src="arsenal-data.js"></script>
   <script src="render.js"></script>
   <script>
+    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -83,7 +73,9 @@
         this.classList.add('active');
         const tabId = this.dataset.tab + '-tab';
         document.getElementById(tabId).classList.add('active');
-        if (tabId === 'calculator-tab') calculateDamage();
+        if (tabId === 'calculator-tab') {
+          calculateDamage();
+        }
       });
     });
 
@@ -161,7 +153,7 @@
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
-    // ========== КАЛЬКУЛЯТОР (с обновлённым списком исключений) ==========
+    // ========== КАЛЬКУЛЯТОР ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 0;
@@ -170,9 +162,6 @@
       container.innerHTML = '';
 
       const allWeapons = [];
-      // Исключаем: Кувалда(32), Блокиратор(29), Заземлитель(44), Негатор(10), Зимний страж(14),
-      // Отбойный молоток(3), Бур(17), Паразит(22), Газовая граната(34), Морозящий газ(12),
-      // Коктейль Молотова(21), Огнемёт(24), Горящий свин(28), АК-47(20), Котоудар(49)
       const excludedIds = [32, 29, 44, 10, 14, 3, 17, 22, 34, 12, 21, 24, 28, 20, 49];
 
       if (typeof infiniteWeapons !== 'undefined') {
