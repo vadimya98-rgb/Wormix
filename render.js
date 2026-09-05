@@ -41,7 +41,7 @@ function renderConsumableWeapons() {
 }
 
 // ===========================================
-// РЕНДЕР АПГРЕЙДОВ (иконка + название + подпись "АПГРЕЙД")
+// РЕНДЕР АПГРЕЙДОВ (только иконка + название + подпись "АПГРЕЙД", БЕЗ УРОНА)
 // ===========================================
 function renderUpgradeWeapons() {
   const container = document.getElementById('upgrade-weapon-list');
