@@ -3,10 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Арсенал — Wormix Guide</title>
+  <title>Арсенал — Wormix Information</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА (увеличение иконки) ===== */
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      overflow: auto;
+      cursor: pointer;
+    }
+    .image-modal .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 90%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    }
+    .image-modal .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+      z-index: 10000;
+      text-shadow: 0 0 20px rgba(0,0,0,0.9);
+    }
+    .image-modal .close-btn:hover {
+      color: #bbb;
+    }
+  </style>
 </head>
 <body>
+  <!-- Фоновый слой (если есть) -->
+  <div id="bg-layer"></div>
+
   <div class="container">
     <div class="top-nav">
       <a href="index.html" class="back-btn">🏠 Главная</a>
@@ -30,8 +76,11 @@
       <div id="consumable-weapon-list" class="card-grid"></div>
     </div>
 
+    <!-- ===== ОБНОВЛЁННАЯ ВКЛАДКА "АПГРЕЙД" ===== -->
     <div id="upgrade-tab" class="tab-content">
-      <p style="color: #fcd34d; text-align: center; font-weight: 600; margin-bottom: 12px;">🔥 Самый нужный арсенал для битв</p>
+      <p style="color: #fcd34d; text-align: center; font-weight: 600; margin-bottom: 12px;">
+        🔥 Самый нужный арсенал для битв
+      </p>
       <div id="upgrade-weapon-list" class="card-grid"></div>
     </div>
 
@@ -62,6 +111,12 @@
     </div>
   </div>
 
+  <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ УВЕЛИЧЕНИЯ ИКОНКИ ===== -->
+  <div id="imageModal" class="image-modal" onclick="closeModal()">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage" src="" alt="Увеличенное изображение">
+  </div>
+
   <script src="arsenal-data.js"></script>
   <script src="render.js"></script>
   <script>
@@ -79,19 +134,36 @@
       });
     });
 
-    // ========== ПАРСИНГ УРОНА (универсальный) ==========
+    // ===== ФУНКЦИИ ДЛЯ МОДАЛЬНОГО ОКНА =====
+    function openModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.style.display = 'block';
+      modalImg.src = imageSrc;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ========== ПАРСИНГ УРОНА ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
 
-      // Диапазон
       const rangeMatch = damageStr.match(/от\s*(\d+)\s*(?:до|-)\s*(\d+)/i) || damageStr.match(/(\d+)\s*[-–—]\s*(\d+)/);
       if (rangeMatch) {
         const min = parseInt(rangeMatch[1]), max = parseInt(rangeMatch[2]);
         return { type: 'range', min, max, display, formula: `${min}–${max}` };
       }
 
-      // Взрыв + осколки
       const explosionMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*(?:от\s*)?(?:взрыв|урон)\s*\+\s*(\d+)\s*(?:осколк(?:а|ов)?|куск(?:а|ов)?|част(?:и|ей)?)\s*по\s*(\d+)/i);
       if (explosionMatch) {
         const direct = parseInt(explosionMatch[1]);
@@ -102,7 +174,6 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // Взрыв + умножение
       const explosionMultMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*(?:от\s*)?(?:взрыв|урон)\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (explosionMultMatch) {
         const direct = parseInt(explosionMultMatch[1]);
@@ -113,7 +184,6 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // Прямой + умножение (без слова взрыв)
       const sumMultMatch = damageStr.match(/(\d+)\s*(?:ед\.?)?\s*\+\s*(\d+)\s*[×x*]\s*(\d+)/i);
       if (sumMultMatch) {
         const direct = parseInt(sumMultMatch[1]);
@@ -124,7 +194,6 @@
         return { type: 'explosion', direct, count, per, base, display, formula };
       }
 
-      // Множественные попадания (без взрыва)
       const hitsMatch = damageStr.match(/(\d+)\s*(?:пуль|осколк(?:а|ов)?|дробинок|ракет|снарядов|разрядов|удар|раз|раза|отскок(?:а|ов)?|выстрел(?:а|ов)?|очеред(?:и|ей)?|кота|кот)\s*по\s*(\d+)/i);
       if (hitsMatch) {
         const count = parseInt(hitsMatch[1]);
@@ -134,7 +203,6 @@
         return { type: 'mult', count, per, base, display, formula };
       }
 
-      // Простое умножение X×Y
       const multMatch = damageStr.match(/(\d+)\s*[×x*]\s*(\d+)/i);
       if (multMatch) {
         const count = parseInt(multMatch[1]);
@@ -143,7 +211,6 @@
         return { type: 'mult', count, per, base, display, formula: `${count}×${per}` };
       }
 
-      // Простое число
       const firstNum = damageStr.match(/(\d+)/);
       if (firstNum) {
         const base = parseInt(firstNum[1]);
