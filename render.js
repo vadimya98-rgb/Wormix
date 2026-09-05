@@ -1,5 +1,5 @@
 // ===========================================
-// РЕНДЕР КАРТОЧЕК (БЕЗ МОДАЛЬНОГО ОКНА ДЛЯ ОСНОВНЫХ ВКЛАДОК)
+// РЕНДЕР КАРТОЧЕК (БЕЗ МОДАЛЬНОГО ОКНА)
 // ===========================================
 function createCard(w) {
   const card = document.createElement('div');
@@ -41,7 +41,7 @@ function renderConsumableWeapons() {
 }
 
 // ===========================================
-// РЕНДЕР АПГРЕЙДОВ (с модалкой по клику на иконку)
+// РЕНДЕР АПГРЕЙДОВ (иконка + название + подпись "АПГРЕЙД")
 // ===========================================
 function renderUpgradeWeapons() {
   const container = document.getElementById('upgrade-weapon-list');
@@ -55,13 +55,11 @@ function renderUpgradeWeapons() {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="card-icon" onclick="openModal('${w.image}')" style="cursor:pointer;">
+      <div class="card-icon" onclick="openModal('${w.image}', '${w.name}')" style="cursor:pointer;">
         <img src="${w.image}" alt="${w.name}" loading="lazy">
       </div>
       <h3>${w.name}</h3>
-      <div class="info">${w.type}</div>
-      <div class="info">⚔️ ${w.damage}</div>
-      <div class="comment">${w.comment || ''}</div>
+      <div style="font-size: 1.2rem; font-weight: 800; color: #fcd34d; letter-spacing: 2px; margin-top: 4px; text-transform: uppercase;">Апгрейд</div>
     `;
     container.appendChild(card);
   });
