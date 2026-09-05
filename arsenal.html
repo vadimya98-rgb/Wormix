@@ -167,7 +167,7 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ========== ПАРСИНГ УРОНА ==========
+    // ========== КАЛЬКУЛЯТОР (только базовое оружие) ==========
     function parseDamageValue(damageStr) {
       if (!damageStr || damageStr === '—') return { type: 'none', base: 0, display: damageStr || '—', formula: '-' };
       const display = damageStr;
@@ -234,7 +234,6 @@
       return { type: 'none', base: 0, display, formula: '-' };
     }
 
-    // ========== КАЛЬКУЛЯТОР (только базовое оружие: бесконечное + штучное) ==========
     function calculateDamage() {
       const container = document.getElementById('calculator-results');
       const attack = parseInt(document.getElementById('attack-input').value) || 0;
@@ -243,8 +242,6 @@
       container.innerHTML = '';
 
       const allWeapons = [];
-      // Исключаем апгрейды – они не участвуют в калькуляторе
-      // Также исключаем особые виды оружия, урон которых не зависит от атаки/брони
       const excludedIds = [32, 29, 44, 3, 17, 22, 34, 21, 24, 28, 20, 49];
 
       if (typeof infiniteWeapons !== 'undefined') {
