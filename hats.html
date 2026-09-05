@@ -281,12 +281,12 @@
       <div id="boss-hats-list" class="boss-grid"></div>
     </div>
 
-    <!-- УНИКАЛЬНЫЕ -->
+    <!-- УНИКАЛЬНЫЕ (2 в ряд) -->
     <div id="unique-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         ⭐ Уникальные шапки – особые награды
       </p>
-      <div id="unique-hats-list" class="hats-list"></div>
+      <div id="unique-hats-list" class="boss-grid"></div>
     </div>
 
     <!-- СБОРКА -->
@@ -369,13 +369,13 @@
       });
     }
 
-    // ===== РЕНДЕР УНИКАЛЬНЫХ =====
+    // ===== РЕНДЕР УНИКАЛЬНЫХ (используем boss-grid) =====
     function renderUniqueHats() {
       const container = document.getElementById('unique-hats-list');
       if (!container) return;
       container.innerHTML = '';
       if (typeof uniqueHats === 'undefined' || uniqueHats.length === 0) {
-        container.innerHTML = '<p style="color:#94a3b8; text-align:center;">⭐ Скоро здесь появятся уникальные шапки</p>';
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; grid-column: 1 / -1;">⭐ Скоро здесь появятся уникальные шапки</p>';
         return;
       }
       uniqueHats.forEach(h => {
