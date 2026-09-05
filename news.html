@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новости — Wormix Information</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Стили для вкладок и карточек новостей */
+    .news-tabs {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .news-tabs button {
+      padding: 10px 20px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 40px;
+      background: rgba(255,255,255,0.05);
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      backdrop-filter: blur(4px);
+      flex: 1;
+      max-width: 200px;
+    }
+    .news-tabs button.active {
+      background: rgba(255,255,255,0.15);
+      border-color: #a78bfa;
+      color: #fff;
+      box-shadow: 0 0 30px rgba(167,139,250,0.2);
+    }
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .news-item {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      transition: 0.3s;
+    }
+    .news-item:hover {
+      border-color: #818cf8;
+      background: rgba(255,255,255,0.08);
+    }
+    .news-item .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .news-item .date {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    .news-item .status {
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-active {
+      background: rgba(52, 211, 153, 0.15);
+      color: #34d399;
+    }
+    .status-finished {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+    .status-upcoming {
+      background: rgba(96, 165, 250, 0.15);
+      color: #60a5fa;
+    }
+    .news-item h2 {
+      font-size: 1.3rem;
+      color: #fff;
+      margin: 6px 0 8px;
+    }
+    .news-item .description {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .news-item .results {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: rgba(252, 211, 77, 0.08);
+      border-left: 4px solid #fcd34d;
+      border-radius: 8px;
+      color: #fcd34d;
+      font-weight: 500;
+    }
+    .news-item img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+    .empty-news {
+      text-align: center;
+      color: #94a3b8;
+      padding: 40px 20px;
+    }
+    .loading {
+      text-align: center;
+      color: #94a3b8;
+      padding: 40px 20px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="bg-layer"></div>
+
+  <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-btn">🏠 Главная</a>
+    </div>
+
+    <h1>📰 Новости</h1>
+    <p class="subtitle">Актуальные события, конкурсы и результаты</p>
+
+    <div class="news-tabs">
+      <button class="tab-btn active" data-tab="main">📌 Главные</button>
+      <button class="tab-btn" data-tab="contests">🏆 Конкурсы</button>
+      <button class="tab-btn" data-tab="results">📊 Результаты</button>
+    </div>
+
+    <div id="main-tab" class="tab-content active">
+      <div id="main-list" class="news-list">
+        <div class="loading">⏳ Загрузка...</div>
+      </div>
+    </div>
+
+    <div id="contests-tab" class="tab-content">
+      <div id="contests-list" class="news-list">
+        <div class="loading">⏳ Загрузка...</div>
+      </div>
+    </div>
+
+    <div id="results-tab" class="tab-content">
+      <div id="results-list" class="news-list">
+        <div class="loading">⏳ Загрузка...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="bg-generator.js"></script>
+  <script>
+    // Переключение вкладок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        const tabId = this.dataset.tab + '-tab';
+        document.getElementById(tabId).classList.add('active');
+        // При переключении можно перезагружать данные (если нужно)
+      });
+    });
+
+    // Загрузка и фильтрация новостей
+    async function loadNews() {
+      try {
+        const response = await fetch('news.json?t=' + Date.now());
+        if (!response.ok) throw new Error('Файл не найден');
+        const data = await response.json();
+        if (!data.news || data.news.length === 0) {
+          document.querySelectorAll('.news-list').forEach(el => {
+            el.innerHTML = '<div class="empty-news">📭 Пока нет новостей. Загляните позже!</div>';
+          });
+          return;
+        }
+
+        // Сортировка: новые сверху
+        const sorted = data.news.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Разделяем по категориям
+        const mainNews = sorted.filter(item => item.category === 'main' || !item.category);
+        const contests = sorted.filter(item => item.category === 'contest');
+        const results = sorted.filter(item => item.category === 'result');
+
+        renderNews('main-list', mainNews);
+        renderNews('contests-list', contests);
+        renderNews('results-list', results);
+      } catch (error) {
+        document.querySelectorAll('.news-list').forEach(el => {
+          el.innerHTML = '<div class="empty-news">❌ Не удалось загрузить новости. Проверьте файл news.json</div>';
+        });
+        console.error(error);
+      }
+    }
+
+    function renderNews(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (items.length === 0) {
+        container.innerHTML = '<div class="empty-news">📭 В этой категории пока ничего нет.</div>';
+        return;
+      }
+      container.innerHTML = items.map(item => {
+        const statusClass = item.status === 'active' ? 'status-active' :
+                            item.status === 'finished' ? 'status-finished' : 'status-upcoming';
+        const statusLabel = item.status === 'active' ? '🔥 Активно' :
+                            item.status === 'finished' ? '🏁 Завершён' : '📅 Скоро';
+        let resultsHTML = '';
+        if (item.results) {
+          resultsHTML = `<div class="results">🏆 Итоги: ${item.results}</div>`;
+        }
+        let imageHTML = '';
+        if (item.image) {
+          imageHTML = `<img src="${item.image}" alt="${item.title}" loading="lazy">`;
+        }
+        return `
+          <div class="news-item">
+            <div class="header">
+              <span class="date">📅 ${item.date}</span>
+              <span class="status ${statusClass}">${statusLabel}</span>
+            </div>
+            <h2>${item.title}</h2>
+            <div class="description">${item.description}</div>
+            ${imageHTML}
+            ${resultsHTML}
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadNews);
+  </script>
+</body>
+</html>
