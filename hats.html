@@ -125,8 +125,7 @@
       gap: 10px;
       margin-bottom: 8px;
     }
-    .craft-item .craft-ingredient,
-    .craft-item .craft-result {
+    .craft-item .craft-ingredient {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -137,12 +136,39 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .craft-item .craft-ingredient:hover,
-    .craft-item .craft-result:hover {
+    .craft-item .craft-ingredient:hover {
       background: rgba(255,255,255,0.12);
       border-color: #818cf8;
     }
-    .craft-item .craft-ingredient img,
+    .craft-item .craft-ingredient img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.2);
+      padding: 2px;
+      pointer-events: none;
+    }
+    .craft-item .craft-ingredient .name {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .craft-item .craft-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(252, 211, 77, 0.08);
+      padding: 4px 14px 4px 6px;
+      border-radius: 30px;
+      border: 1px solid rgba(252, 211, 77, 0.2);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .craft-item .craft-result:hover {
+      background: rgba(252, 211, 77, 0.15);
+    }
     .craft-item .craft-result img {
       width: 36px;
       height: 36px;
@@ -152,20 +178,12 @@
       padding: 2px;
       pointer-events: none;
     }
-    .craft-item .craft-ingredient .name,
     .craft-item .craft-result .name {
-      font-size: 0.85rem;
-      color: #cbd5e1;
-      white-space: nowrap;
-      pointer-events: none;
-    }
-    .craft-item .craft-result {
-      background: rgba(252, 211, 77, 0.08);
-      border: 1px solid rgba(252, 211, 77, 0.2);
-    }
-    .craft-item .craft-result .name {
+      font-size: 0.9rem;
       color: #fff;
       font-weight: 600;
+      white-space: nowrap;
+      pointer-events: none;
     }
     .craft-item .craft-plus {
       color: #94a3b8;
@@ -244,7 +262,7 @@
       <button class="tab-btn" data-tab="craft">🔧 Сборка</button>
     </div>
 
-    <!-- ===== БАЗА ===== -->
+    <!-- БАЗА -->
     <div id="base-tab" class="tab-content active">
       <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
         👆 Нажми на иконку — она увеличится
@@ -252,7 +270,7 @@
       <div id="hats-list" class="hats-list"></div>
     </div>
 
-    <!-- ===== ЗА БОССА ===== -->
+    <!-- ЗА БОССА -->
     <div id="boss-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Шапки, которые можно получить за прохождение боссов
@@ -260,14 +278,13 @@
       <div id="boss-hats-list" class="boss-grid"></div>
     </div>
 
-    <!-- ===== СБОРКА ===== -->
+    <!-- СБОРКА -->
     <div id="craft-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         🔧 Рецепты сборки шапок
       </p>
-      <!-- ПОДСКАЗКА ДЛЯ КЛИКА -->
       <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
-        👆 Нажми на шапку — она увеличится
+        👆 Нажми на иконку — она увеличится
       </p>
       <div id="craft-list" class="craft-grid"></div>
     </div>
@@ -279,7 +296,7 @@
     <img id="modalImage" src="" alt="Увеличенное изображение">
   </div>
 
-  <script src="data.js"></script>
+  <script src="hats-data.js"></script>
   <script>
     // ===== ПОИСК ПРЕДМЕТА =====
     function findItem(type, name) {
@@ -293,7 +310,7 @@
       return list.find(item => item.name.toLowerCase().trim() === nameLower) || null;
     }
 
-    // ===== РЕНДЕР БАЗЫ (только первые 61 шапка) =====
+    // ===== РЕНДЕР БАЗЫ (только первые 61) =====
     function renderHats() {
       const container = document.getElementById('hats-list');
       if (!container) return;
@@ -356,38 +373,37 @@
         let ingredientsHTML = '';
         const ingNames = recipe.ingredients || [];
         ingNames.forEach((ing, index) => {
-          let imageSrc = '';
-          let displayName = '';
-          let clickable = false;
           if (ing.type === 'emblem') {
-            imageSrc = wormixEmblem?.image || '';
-            displayName = `${ing.count || 1}× Эмблема`;
-            clickable = true; // можно увеличить эмблему
+            const emblemImg = wormixEmblem?.image || '';
+            const count = ing.count || 1;
+            ingredientsHTML += `
+              <span class="craft-ingredient" data-image="${emblemImg}">
+                <img src="${emblemImg}" alt="Эмблема">
+                <span class="name">${count}× Эмблема</span>
+              </span>
+            `;
           } else {
             const found = findItem(ing.type, ing.name);
             if (found) {
-              imageSrc = found.image;
-              displayName = found.name;
-              clickable = true;
+              ingredientsHTML += `
+                <span class="craft-ingredient" data-image="${found.image}">
+                  <img src="${found.image}" alt="${found.name}">
+                  <span class="name">${found.name}</span>
+                </span>
+              `;
             } else {
-              imageSrc = '';
-              displayName = `❓ ${ing.name}`;
-              clickable = false;
+              ingredientsHTML += `
+                <span class="craft-ingredient">
+                  <span class="name">❓ ${ing.name}</span>
+                </span>
+              `;
             }
           }
-          const clickAttr = clickable ? `data-image="${imageSrc}"` : '';
-          ingredientsHTML += `
-            <span class="craft-ingredient" ${clickAttr}>
-              ${imageSrc ? `<img src="${imageSrc}" alt="${displayName}">` : ''}
-              <span class="name">${displayName}</span>
-            </span>
-          `;
           if (index < ingNames.length - 1) {
             ingredientsHTML += `<span class="craft-plus">+</span>`;
           }
         });
 
-        // Результат
         const resultName = recipe.result?.name || 'Неизвестно';
         const resultItem = findItem('hat', resultName) || findItem('bossHat', resultName);
         let resultHTML = '';
@@ -417,7 +433,6 @@
         container.appendChild(item);
       });
 
-      // Добавляем обработчики клика для всех кликабельных элементов внутри рецептов
       container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
         el.addEventListener('click', function(e) {
           e.stopPropagation();
