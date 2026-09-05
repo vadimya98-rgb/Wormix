@@ -127,6 +127,42 @@ const bossArtifacts = [
 ];
 
 // ============================================
+//    УНИКАЛЬНЫЕ АРТЕФАКТЫ (6 штук)
+// ============================================
+const uniqueArtifacts = [
+    {
+        id: 1,
+        image: "https://i.ibb.co/qGf9YkH/3-Sjrkc443v-E.jpg",
+        name: "Артефакт 1"
+    },
+    {
+        id: 2,
+        image: "https://i.ibb.co/ZR6QR6DK/odh-Pvbt6-Rgg.jpg",
+        name: "Артефакт 2"
+    },
+    {
+        id: 3,
+        image: "https://i.ibb.co/WWLDGHM9/0-Dg-HAXb-ZVrk.jpg",
+        name: "Артефакт 3"
+    },
+    {
+        id: 4,
+        image: "https://i.ibb.co/NdbZW8dG/ds-San-S7a-RUs.jpg",
+        name: "Артефакт 4"
+    },
+    {
+        id: 5,
+        image: "https://i.ibb.co/ccj2cDPy/ewco-DMcz-Xj0.jpg",
+        name: "Артефакт 5"
+    },
+    {
+        id: 6,
+        image: "https://i.ibb.co/qYWg3jsZ/ck-Xvchij-E-A.jpg",
+        name: "Артефакт 6"
+    }
+];
+
+// ============================================
 //    ЭМБЛЕМА ВОРМИКС
 // ============================================
 const wormixEmblem = {
