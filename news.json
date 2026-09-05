@@ -1,0 +1,34 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "date": "2026-09-05",
+      "title": "Добро пожаловать на сайт!",
+      "description": "Здесь будут публиковаться новости игры, анонсы конкурсов и их результаты. Следите за обновлениями!",
+      "category": "main",
+      "status": "active",
+      "results": null,
+      "image": null
+    },
+    {
+      "id": 2,
+      "date": "2026-09-01",
+      "title": "Конкурс на лучший скин",
+      "description": "Присылайте свои варианты скинов для оружия. Победители получат 500 рубинов!",
+      "category": "contest",
+      "status": "active",
+      "results": null,
+      "image": "https://i.ibb.co/your-image-link.jpg"
+    },
+    {
+      "id": 3,
+      "date": "2026-08-20",
+      "title": "Итоги конкурса скриншотов",
+      "description": "Конкурс завершён. Поздравляем победителей!",
+      "category": "result",
+      "status": "finished",
+      "results": "1 место — Игрок_1, 2 место — Игрок_2, 3 место — Игрок_3",
+      "image": null
+    }
+  ]
+}
