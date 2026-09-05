@@ -1,5 +1,5 @@
 // ===========================================
-// РЕНДЕР КАРТОЧЕК (БЕЗ МОДАЛЬНОГО ОКНА)
+// РЕНДЕР КАРТОЧЕК (БЕЗ МОДАЛЬНОГО ОКНА ДЛЯ ОСНОВНЫХ ВКЛАДОК)
 // ===========================================
 function createCard(w) {
   const card = document.createElement('div');
@@ -11,7 +11,6 @@ function createCard(w) {
     <div class="info">⚔️ ${w.damage}</div>
     <div class="comment">${w.comment || ''}</div>
   `;
-  // Без клика – модальное окно не нужно
   return card;
 }
 
@@ -41,6 +40,9 @@ function renderConsumableWeapons() {
   });
 }
 
+// ===========================================
+// РЕНДЕР АПГРЕЙДОВ (с модалкой по клику на иконку)
+// ===========================================
 function renderUpgradeWeapons() {
   const container = document.getElementById('upgrade-weapon-list');
   if (!container) return;
@@ -50,7 +52,18 @@ function renderUpgradeWeapons() {
     return;
   }
   upgradeWeapons.forEach(w => {
-    container.appendChild(createCard(w));
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-icon" onclick="openModal('${w.image}')" style="cursor:pointer;">
+        <img src="${w.image}" alt="${w.name}" loading="lazy">
+      </div>
+      <h3>${w.name}</h3>
+      <div class="info">${w.type}</div>
+      <div class="info">⚔️ ${w.damage}</div>
+      <div class="comment">${w.comment || ''}</div>
+    `;
+    container.appendChild(card);
   });
 }
 
