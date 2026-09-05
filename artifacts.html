@@ -262,7 +262,7 @@
       <button class="tab-btn" data-tab="craft">🔧 Сборка</button>
     </div>
 
-    <!-- База -->
+    <!-- БАЗА -->
     <div id="base-tab" class="tab-content active">
       <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
         👆 Нажми на иконку — она увеличится
@@ -270,7 +270,7 @@
       <div id="artifacts-list" class="artifacts-list"></div>
     </div>
 
-    <!-- За Босса -->
+    <!-- ЗА БОССА -->
     <div id="boss-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         👹 Артефакты, которые можно получить за прохождение боссов
@@ -278,7 +278,7 @@
       <div id="boss-artifacts-list" class="boss-grid"></div>
     </div>
 
-    <!-- Сборка -->
+    <!-- СБОРКА -->
     <div id="craft-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         🔧 Рецепты сборки артефактов
@@ -296,7 +296,7 @@
     <img id="modalImage" src="" alt="Увеличенное изображение">
   </div>
 
-  <script src="data.js"></script>
+  <script src="artifacts-data.js"></script>
   <script>
     function findItem(type, name) {
       const nameLower = name.toLowerCase().trim();
@@ -317,7 +317,6 @@
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">⚡ Скоро здесь появятся артефакты</p>';
         return;
       }
-      // Фильтруем: показываем только базовые артефакты (id 1–17), исключаем итоговые (id 18, 19)
       const baseArtifacts = artifacts.filter(a => a.id <= 17);
       if (baseArtifacts.length === 0) {
         container.innerHTML = '<p style="color:#94a3b8; text-align:center;">⚡ База артефактов пуста</p>';
