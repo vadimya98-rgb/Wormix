@@ -6,7 +6,6 @@
   <title>Новости — Wormix Information</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Стили для вкладок и карточек новостей */
     .news-tabs {
       display: flex;
       gap: 10px;
@@ -97,6 +96,7 @@
       color: #cbd5e1;
       font-size: 0.95rem;
       line-height: 1.5;
+      white-space: pre-wrap;
     }
     .news-item .results {
       margin-top: 12px;
@@ -111,6 +111,11 @@
       max-width: 100%;
       border-radius: 12px;
       margin-top: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .news-item img:hover {
+      opacity: 0.8;
     }
     .empty-news {
       text-align: center;
@@ -122,6 +127,48 @@
       color: #94a3b8;
       padding: 40px 20px;
       font-style: italic;
+    }
+
+    /* ===== МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК ===== */
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      backdrop-filter: blur(6px);
+      overflow: auto;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-modal.active {
+      display: flex;
+    }
+    .image-modal .modal-content {
+      max-width: 95%;
+      max-height: 95%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    }
+    .image-modal .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+      z-index: 10000;
+      text-shadow: 0 0 20px rgba(0,0,0,0.9);
+    }
+    .image-modal .close-btn:hover {
+      color: #bbb;
     }
   </style>
 </head>
@@ -162,6 +209,12 @@
 
   </div>
 
+  <!-- Модальное окно для увеличения картинки -->
+  <div id="newsImageModal" class="image-modal" onclick="closeNewsModal()">
+    <span class="close-btn" onclick="closeNewsModal()">&times;</span>
+    <img class="modal-content" id="newsModalImage" src="" alt="Увеличенное изображение">
+  </div>
+
   <script src="bg-generator.js"></script>
   <script>
     // Переключение вкладок
@@ -174,6 +227,25 @@
       });
     });
 
+    // Модальное окно для картинок
+    function openNewsModal(imageSrc) {
+      const modal = document.getElementById('newsImageModal');
+      const modalImg = document.getElementById('newsModalImage');
+      modal.classList.add('active');
+      modalImg.src = imageSrc;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeNewsModal() {
+      const modal = document.getElementById('newsImageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeNewsModal();
+    });
+
     // Загрузка и фильтрация новостей
     async function loadNews() {
       try {
@@ -181,17 +253,13 @@
         if (!response.ok) throw new Error('Файл не найден');
         const data = await response.json();
         if (!data.news || data.news.length === 0) {
-          // Если файл пустой – показываем заглушки для каждой вкладки
           document.getElementById('main-list').innerHTML = '<div class="empty-news">📭 Скоро здесь будут актуальные новости, следите за обновлениями.</div>';
           document.getElementById('contests-list').innerHTML = '<div class="empty-news">📭 Здесь скоро появятся актуальные конкурсы, следите за обновлениями.</div>';
           document.getElementById('results-list').innerHTML = '<div class="empty-news">📭 Когда появятся конкурсы, тогда и будут актуальные результаты, следите за обновлениями.</div>';
           return;
         }
 
-        // Сортировка: новые сверху
         const sorted = data.news.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        // Разделяем по категориям
         const mainNews = sorted.filter(item => item.category === 'main' || !item.category);
         const contests = sorted.filter(item => item.category === 'contest');
         const results = sorted.filter(item => item.category === 'result');
@@ -225,7 +293,7 @@
         }
         let imageHTML = '';
         if (item.image) {
-          imageHTML = `<img src="${item.image}" alt="${item.title}" loading="lazy">`;
+          imageHTML = `<img src="${item.image}" alt="${item.title}" loading="lazy" onclick="openNewsModal('${item.image}')">`;
         }
         return `
           <div class="news-item">
