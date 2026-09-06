@@ -305,6 +305,7 @@
 
   </div>
 
+  <!-- Модальное окно -->
   <div id="imageModal" class="image-modal" onclick="closeModal()">
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <img id="modalImage" src="" alt="Увеличенное изображение">
@@ -393,7 +394,7 @@
       });
     }
 
-    // ===== РЕНДЕР РЕЦЕПТОВ =====
+    // ===== РЕНДЕР РЕЦЕПТОВ (с модальным окном) =====
     function renderCraftRecipes() {
       const container = document.getElementById('craft-list');
       if (!container) return;
@@ -469,7 +470,7 @@
         container.appendChild(item);
       });
 
-      // Добавляем обработчики клика для увеличения иконок
+      // Навешиваем обработчики клика для увеличения иконок
       container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
         el.addEventListener('click', function(e) {
           e.stopPropagation();
