@@ -394,7 +394,7 @@
       });
     }
 
-    // ===== РЕНДЕР РЕЦЕПТОВ (с прямым обработчиком на каждую иконку) =====
+    // ===== РЕНДЕР РЕЦЕПТОВ (с обработчиками на каждой иконке) =====
     function renderCraftRecipes() {
       const container = document.getElementById('craft-list');
       if (!container) return;
@@ -470,7 +470,7 @@
         container.appendChild(item);
       });
 
-      // Навешиваем обработчики клика на каждую иконку с data-image
+      // Навешиваем обработчики на каждую иконку с data-image
       container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
         el.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -497,13 +497,19 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (с перерендером сборки) =====
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
-        document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+        const tabId = this.dataset.tab + '-tab';
+        document.getElementById(tabId).classList.add('active');
+
+        // Если переключились на вкладку сборки – перерендерим её, чтобы навесить обработчики
+        if (this.dataset.tab === 'craft') {
+          renderCraftRecipes();
+        }
       });
     });
 
