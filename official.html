@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Официальные страницы — Wormix Guide</title>
+  <title>Официальные страницы — Wormix Information</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .links-list {
@@ -56,6 +56,9 @@
   </style>
 </head>
 <body>
+  <!-- Фоновый слой -->
+  <div id="bg-layer"></div>
+
   <div class="container">
     <div class="top-nav">
       <a href="index.html" class="back-btn">🏠 Главная</a>
@@ -65,7 +68,6 @@
     <p class="subtitle">Все официальные ресурсы Wormix Mobile в одном месте</p>
 
     <div class="links-list">
-
       <!-- Wormix Медиа -->
       <a href="https://t.me/mediawormixmobile" target="_blank" class="link-item">
         <span class="icon">📹</span>
@@ -86,7 +88,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <!-- Бот для жалоб (без правил) -->
+      <!-- Бот для жалоб -->
       <a href="https://t.me/policewm_bot" target="_blank" class="link-item">
         <span class="icon">🤖</span>
         <span class="info">
@@ -115,8 +117,9 @@
         </span>
         <span class="arrow">→</span>
       </a>
-
     </div>
   </div>
+
+  <script src="bg-generator.js"></script>
 </body>
 </html>
