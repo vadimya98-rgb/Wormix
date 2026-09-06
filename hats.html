@@ -248,6 +248,7 @@
   </style>
 </head>
 <body>
+  <!-- Фоновый слой -->
   <div id="bg-layer"></div>
 
   <div class="container">
@@ -281,7 +282,7 @@
       <div id="boss-hats-list" class="boss-grid"></div>
     </div>
 
-    <!-- УНИКАЛЬНЫЕ (2 в ряд) -->
+    <!-- УНИКАЛЬНЫЕ -->
     <div id="unique-tab" class="tab-content">
       <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
         ⭐ Уникальные шапки – особые награды
@@ -369,7 +370,7 @@
       });
     }
 
-    // ===== РЕНДЕР УНИКАЛЬНЫХ (используем boss-grid) =====
+    // ===== РЕНДЕР УНИКАЛЬНЫХ =====
     function renderUniqueHats() {
       const container = document.getElementById('unique-hats-list');
       if (!container) return;
@@ -510,5 +511,7 @@
       if (document.getElementById('craft-list')) renderCraftRecipes();
     });
   </script>
+  <!-- Подключаем генератор фона -->
+  <script src="bg-generator.js"></script>
 </body>
 </html>
