@@ -245,10 +245,22 @@
     .image-modal .close-btn:hover {
       transform: scale(1.2);
     }
+
+    .tip-text {
+      color: #cbd5e1;
+      text-align: center;
+      font-style: italic;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.05);
+      padding: 8px 12px;
+      border-radius: 40px;
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(4px);
+    }
   </style>
 </head>
 <body>
-  <!-- Фоновый слой -->
   <div id="bg-layer"></div>
 
   <div class="container">
@@ -268,36 +280,26 @@
 
     <!-- БАЗА -->
     <div id="base-tab" class="tab-content active">
-      <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
-        👆 Нажми на иконку — она увеличится
-      </p>
+      <div class="tip-text">👆 Нажми на иконку — она увеличится</div>
       <div id="artifacts-list" class="artifacts-list"></div>
     </div>
 
     <!-- ЗА БОССА -->
     <div id="boss-tab" class="tab-content">
-      <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
-        👹 Артефакты, которые можно получить за прохождение боссов
-      </p>
+      <div class="tip-text">👆 Нажми на иконку — она увеличится</div>
       <div id="boss-artifacts-list" class="boss-grid"></div>
     </div>
 
     <!-- УНИКАЛЬНЫЕ -->
     <div id="unique-tab" class="tab-content">
-      <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
-        ⭐ Уникальные артефакты – особые награды
-      </p>
+      <div class="tip-text">👆 Нажми на иконку — она увеличится</div>
       <div id="unique-artifacts-list" class="boss-grid"></div>
     </div>
 
     <!-- СБОРКА -->
     <div id="craft-tab" class="tab-content">
-      <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">
-        🔧 Рецепты сборки артефактов
-      </p>
-      <p style="color:#cbd5e1; text-align:center; font-style:italic; font-size:0.95rem; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:40px; margin-top:8px; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(4px);">
-        👆 Нажми на иконку — она увеличится
-      </p>
+      <p style="color: #fcd34d; text-align: center; margin-bottom: 12px;">🔧 Рецепты сборки артефактов</p>
+      <div class="tip-text">👆 Нажми на иконку — она увеличится</div>
       <div id="craft-list" class="craft-grid"></div>
     </div>
 
