@@ -394,7 +394,7 @@
       });
     }
 
-    // ===== РЕНДЕР РЕЦЕПТОВ (с модальным окном) =====
+    // ===== РЕНДЕР РЕЦЕПТОВ (с делегированием для модалки) =====
     function renderCraftRecipes() {
       const container = document.getElementById('craft-list');
       if (!container) return;
@@ -470,13 +470,14 @@
         container.appendChild(item);
       });
 
-      // Навешиваем обработчики клика для увеличения иконок
-      container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
-        el.addEventListener('click', function(e) {
+      // Делегирование: клик по контейнеру, проверяем, кликнули ли по элементу с data-image
+      container.addEventListener('click', function(e) {
+        const target = e.target.closest('.craft-ingredient[data-image], .craft-result[data-image]');
+        if (target) {
           e.stopPropagation();
-          const imgSrc = this.dataset.image;
+          const imgSrc = target.dataset.image;
           if (imgSrc) openModal(imgSrc);
-        });
+        }
       });
     }
 
@@ -516,5 +517,6 @@
     });
   </script>
   <script src="bg-generator.js"></script>
+  <script src="scroll-top.js"></script>
 </body>
 </html>
