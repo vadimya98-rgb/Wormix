@@ -394,7 +394,7 @@
       });
     }
 
-    // ===== РЕНДЕР РЕЦЕПТОВ (с обработчиками на каждой иконке) =====
+    // ===== РЕНДЕР РЕЦЕПТОВ =====
     function renderCraftRecipes() {
       const container = document.getElementById('craft-list');
       if (!container) return;
@@ -469,15 +469,6 @@
         `;
         container.appendChild(item);
       });
-
-      // Навешиваем обработчики на каждую иконку с data-image
-      container.querySelectorAll('.craft-ingredient[data-image], .craft-result[data-image]').forEach(el => {
-        el.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const imgSrc = this.dataset.image;
-          if (imgSrc) openModal(imgSrc);
-        });
-      });
     }
 
     // ===== МОДАЛЬНОЕ ОКНО =====
@@ -497,7 +488,25 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (с перерендером сборки) =====
+    // ===== ДЕЛЕГИРОВАНИЕ НА УРОВНЕ document ДЛЯ СБОРКИ =====
+    document.addEventListener('click', function(e) {
+      // Проверяем, что клик произошёл внутри вкладки сборки
+      const craftContainer = document.getElementById('craft-list');
+      if (!craftContainer) return;
+      if (!craftContainer.contains(e.target)) return;
+
+      // Ищем ближайший элемент с data-image
+      const target = e.target.closest('.craft-ingredient[data-image], .craft-result[data-image]');
+      if (target) {
+        e.stopPropagation();
+        const imgSrc = target.dataset.image;
+        if (imgSrc) {
+          openModal(imgSrc);
+        }
+      }
+    });
+
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -506,7 +515,7 @@
         const tabId = this.dataset.tab + '-tab';
         document.getElementById(tabId).classList.add('active');
 
-        // Если переключились на вкладку сборки – перерендерим её, чтобы навесить обработчики
+        // Если переключились на сборку – перерендерим
         if (this.dataset.tab === 'craft') {
           renderCraftRecipes();
         }
